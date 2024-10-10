@@ -1,0 +1,308 @@
+@media (min-width: 1024px)
+{
+    .lst-tour-item {
+    
+    }
+    .lst-tour-item_depth1 .bimg-lst2 {
+        padding-right: 0;
+    }
+    .lst-tour-item_depth1 .bct-main2 {
+        padding-left: 30px;
+    }
+    .col-dk-2 {
+        width: 20%;
+    }
+    .prdcontact-fix {
+        display: none;
+    }
+    .group-calendar .date-start {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 0;
+    }
+}
+@media (min-width: 1200px)
+{
+    .container {
+        width: 96%;
+    }
+    .header-top .container {
+    }
+    .header-bottom .container {
+    }
+    .lst-tour-item_depth1 .img-default {
+        height: 200px;
+    }
+}
+@media (min-width: 1366px)
+{
+    .container {
+        width: 94%;
+    }
+    .header-top .container {
+    }
+    .header-bottom .container {
+        width: 1280px;
+    }
+    .lst-tour-item {
+        height: 458px;
+    }
+    .col-dk-2 {
+        width: 20%;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+@media (min-width: 1600px)
+{
+    .lst-tour-item {
+        height: 545px;
+    }
+    .support-center ul {
+        margin-top: 303px;
+    }
+}
+@media only screen and (max-width: 1024px)
+{
+
+}
+@media only screen and (max-width: 1024px) and (min-width: 769px)
+{
+
+}
+@media only screen and (max-width: 768px)
+{
+    .header-bottom {
+        display: none;
+    }
+    .bx-fr-right {
+        padding-bottom: 15px;
+    }
+    .header-top .cl-logo {
+        width: 50%;
+        float: left;
+    }
+    .header-top .cl-bnt {
+        display: none;
+    }
+    .cl-right-lang {
+        width: 50%;
+        float: right;
+    }
+    .back-to-top {
+        display: none;
+    }
+    .bximg-request-dd {
+        margin-top: 15px;
+    }
+    .khkhkocog {
+        display: none;
+    }
+    .hone-detail-tour {
+        font-size: 18px;
+    }
+    ul.tab-dt-tour li a {
+        height: 46px;
+        font-size: 10px;
+        font-size: 9px;
+    }
+    ul.tab-dt-tour li.tit_tab_booking a {
+        
+    }
+    .box-cldl {
+        display: none;
+    }
+    .box-support-right {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 82px;
+    }
+    .img-event-chao-he {
+        width: 210px;
+    }
+    .lst-tour-item_depth1 .bimg-lst2 .img-event-chao-he {
+        width: 200px;
+    }
+    .hotline-footer {
+        display: none;
+    }
+    .prdcontact-fix {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 42px;
+        background: #ececec;
+        left: 0;
+        bottom: 0;
+        z-index: 9999;
+        opacity: 0.9;
+    }
+    .prdcontact-fix ul {
+        width: 100%;
+        background: #198A0C;
+        display: block;
+        height: 100%;
+        float: left;
+    }
+    .prdcontact-fix ul li {
+        display: block;
+        width: 33.333%;
+        float: left;
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .thtd-code, .thtd-destination, .thtd-bookt, .thtd-date-arrival {
+        display: none;
+    }
+    .support-center ul {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    .date-other-dt-tour {
+        display: none;
+    }
+    .bdesc-dt-right {
+        padding-bottom: 0px;
+    }
+    .bdesc-dt-right-right {
+        display: none;
+    }
+    .price-only-from-mb {
+        font-weight: bold;
+    }
+    .price-sell-mb {
+        font-weight: bold;
+        color: #cc0c0c;
+        font-size: 18px;
+    }
+    #headMenu {
+        height: 66px;
+        width: 100%;
+        float: left;
+        background: #1a7900;
+        position: fixed;
+        z-index: 99999;
+    }
+    #headMenu .img-logo-mn-mb {
+        display: block;
+        height: 35px;
+        float: left;
+        margin-left: 10px;
+        margin-top: 15px;
+    }
+    #headMenu .icon_menu_mobile {
+        position: absolute;
+        left: auto;
+        right: 10px !important;
+        top: 10px !important;
+        font-size: 46px;
+        width: 54px;
+        height: 46px;
+        background: transparent;
+        margin-top: 0;
+    }
+    #headMenu .icon_menu_mobile i {
+        color: #ffffff;
+    }
+    #header-web {
+        /*margin-top: 66px;*/
+    }
+    #choose-lang {
+        margin-top: 66px;
+        text-align: center;
+    }
+    #choose-lang .flag-lang-mb {
+        margin-left: 5px;
+    }
+    #choose-lang .label-txt-lang {
+        font-size: 18px;
+        margin-top: 10px;
+        color: #ec8989;
+    }
+    .breadcrumb-mb {
+        background: #ddd;
+        height: 40px;
+        line-height: 40px;
+        padding-left: 10px;
+        font-size: 18px;
+        margin-top: 10px;
+        margin-bottom: 11px;
+        font-weight: bold;
+    }
+    .lft-ddyt {
+        padding-right: 5px;
+        padding-left: 10px;
+    }
+    .rgt-ddyt {
+        padding-right: 10px;
+        padding-left: 5px;
+    }
+    .group-calendar .date-start {
+        padding-right: 0;
+    }
+    .buy-booking-tour.btn-success {
+        background: transparent;
+        border-color: #ffffff;
+    }
+}
+@media only screen and (max-width: 768px) and (min-width: 641px)
+{
+	
+}
+@media only screen and (max-width: 640px)
+{
+    .swift-lang-r li a span {
+        display: none;
+    }
+    .swift-lang-r {
+        width: 100px;
+        float: none;
+        margin: 0 auto;
+    }
+    .title-r1h {
+        display: none;
+    }
+    .hotline-r1h {
+        /*display: none;*/
+    }
+    .item-lst-pos1 img {
+        width: 100%;
+        height: auto !important;
+    }
+    .item-lst-pos1 .ctlist-right {
+        width: 100%;
+    }
+    .price-dt-tour {
+        padding-left: 0;
+        font-size: 18px;
+    }
+}
+@media only screen and (max-width: 640px) and (min-width: 481px)
+{
+	
+}
+@media only screen and (max-width: 480px)
+{
+
+}
+@media only screen and (max-width: 480px) and (min-width: 361px)
+{
+	
+}
+@media only screen and (max-width: 360px)
+{
+    #headMenu .img-logo-mn-mb {
+        height: 30px;
+        margin-top: 18px;
+    }
+}
+@media only screen and (max-width: 360px) and (min-width: 321px)
+{
+	
+}
+@media only screen and (max-width: 320px)
+{
+	
+}

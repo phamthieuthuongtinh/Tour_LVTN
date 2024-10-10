@@ -1,0 +1,29 @@
+.owl-carousel5 .owl-buttons{
+	position:static;
+}
+.owl-buttons {
+    position: absolute;
+    top: -40px;
+    right: 10px;
+}
+.owl-buttons div {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    position: static;
+    border-radius: 0px !important;
+    text-indent: -100000px;
+}
+.owl-buttons .owl-prev {
+    background: #000 url(../images/fa-angles.png) no-repeat 14px 14px;
+	position:absolute;
+	top:35%;
+	border:1px solid #000;
+}
+.owl-buttons .owl-next {
+    background: #000 url(../images/fa-angles.png) no-repeat -26px 14px;
+	position:absolute;
+	top:35%;
+	right:0px;
+	border:1px solid #000;
+}
