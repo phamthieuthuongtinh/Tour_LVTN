@@ -22,3 +22,4 @@ public/python
 public/public
 public/local_bert_model
 public/local_bert_tokenizer
+model.pkl
