@@ -12,7 +12,7 @@ $(function () {
   var intersect = true
 
   
-  var $salesChart = $('#sales-chart')
+  // var $salesChart = $('#sales-chart')
   // eslint-disable-next-line no-unused-vars
   // var salesChart = new Chart($salesChart, {
   //   type: 'bar',
@@ -144,31 +144,31 @@ $(function () {
   })
 })
 
-var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-var pieData = {
-    labels: [
-      'Chrome',
-      'IE',
-      'FireFox',
-      'Safari',
-      'Opera',
-      'Navigator'
-    ],
-    datasets: [
-      {
-        data: [700, 500, 400, 600, 300, 100],
-        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de']
-      }
-    ]
-}
-var pieOptions = {
-    legend: {
-    display: false
-  }
-}
-var pieChart = new Chart(pieChartCanvas, {
-  type: 'doughnut',
-  data: pieData,
-  options: pieOptions
-})
+// var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+// var pieData = {
+//     labels: [
+//       'Chrome',
+//       'IE',
+//       'FireFox',
+//       'Safari',
+//       'Opera',
+//       'Navigator'
+//     ],
+//     datasets: [
+//       {
+//         data: [700, 500, 400, 600, 300, 100],
+//         backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de']
+//       }
+//     ]
+// }
+// var pieOptions = {
+//     legend: {
+//     display: false
+//   }
+// }
+// var pieChart = new Chart(pieChartCanvas, {
+//   type: 'doughnut',
+//   data: pieData,
+//   options: pieOptions
+// })
 // lgtm [js/unused-local-variable]

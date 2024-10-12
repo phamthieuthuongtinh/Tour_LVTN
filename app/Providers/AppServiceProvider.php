@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Category;
 use App\Models\Banner;
 use App\Models\Discount;
+use App\Models\Order;
+use App\Models\Orderdetail;
 use App\Models\Tour;
 use App\Models\Statistical;
 use App\Models\Statisticalbusinesses;
@@ -41,6 +43,120 @@ class AppServiceProvider extends ServiceProvider
             return  $statistics;
        }  
     }
+    
+    public function getPieData(){
+        $orders=Order::where('order_status',2)->get();
+        $orders_code=$orders->pluck('order_code')->toArray();
+        $order_details=Orderdetail::whereIn('order_code',$orders_code)->get();
+        
+        $count = $order_details->groupBy('tour_id')->map(function ($group) {
+            return $group->count(); // Đếm số bản ghi trong mỗi nhóm tour_id
+        });
+        if(isset(Auth::user()->id)){
+             if(Auth::user()->id==1){
+                $tours=Tour::whereIn('id',$count->keys())->with('type')->get();   
+             }
+             else{
+                $tours=Tour::whereIn('id',$count->keys())->where('business_id',Auth::user()->id)->with('type')->get();     
+             }
+             $tour_count_by_type = [];
+             foreach ($tours as $tour) {
+                $type_name = $tour->type->type_name; // Lấy tên loại tour
+                $tour_id = $tour->id; // Lấy tour_id để khớp với $count
+        
+                // Kiểm tra nếu type_name đã tồn tại trong mảng, thì cộng dồn số lượng
+                if (isset($tour_count_by_type[$type_name])) {
+                    $tour_count_by_type[$type_name] += $count[$tour_id];
+                } else {
+                    // Nếu chưa tồn tại, thì gán giá trị
+                    $tour_count_by_type[$type_name] = $count[$tour_id];
+                }
+            }
+     
+            return collect($tour_count_by_type)->map(function ($count, $type_name) {
+                return [
+                    'type_name' => $type_name,
+                    'count' => $count,
+                ];
+            })->values()->all();
+             
+        }  
+     }
+     public function getPieDataMonth(){
+        $orders=Order::where('order_status',2)->get();
+        $orders_code=$orders->pluck('order_code')->toArray();
+        $order_details=Orderdetail::whereIn('order_code',$orders_code)->get();
+        $order_details_month = OrderDetail::whereIn('order_code', $orders_code)->where('created_at', '>=', Carbon::now()->subMonth())->get();
+        $count = $order_details->groupBy('tour_id')->map(function ($group) {
+            return $group->count(); // Đếm số bản ghi trong mỗi nhóm tour_id
+        });
+        $count_month = $order_details_month->groupBy('tour_id')->map(function ($group) {
+            return $group->count(); // Đếm số bản ghi trong mỗi nhóm tour_id
+        });
+
+
+        $percentageIncrease = collect();
+
+        $count->keys()->each(function ($tour_id) use ($count, $count_month, $percentageIncrease) {
+            $totalCount = $count->get($tour_id); // Lấy tổng số lượng từ mảng count
+            $totalCountMonth = $count_month->get($tour_id, 0); // Lấy số lượng cho tháng hiện tại (nếu không có, mặc định là 0)
+        
+            // Tính tỷ lệ phần trăm
+            $percentage = 0; // Khởi tạo tỷ lệ phần trăm
+            if ($totalCount > 0) { // Tránh chia cho 0
+                if( $totalCountMonth==0){
+                    $percentage=0;
+                }
+                else{
+                    $percentage = ($totalCountMonth   / ($totalCount - $totalCountMonth)) * 100;
+                }
+                
+            }
+        
+            // Thêm vào mảng kết quả với tour_id làm key
+            $percentageIncrease[$tour_id] = abs($percentage);
+        });
+       
+        if(isset(Auth::user()->id)){
+ 
+             if(Auth::user()->id==1){
+                $tours=Tour::whereIn('id',$percentageIncrease->keys())->with('type')->get();
+                // $tour_count_by_type = $tours->groupBy('type.type_name')->map(function ($group) {
+                //     return $group->count(); 
+                // });
+             }
+             else{
+                $tours=Tour::whereIn('id',$percentageIncrease->keys())->where('business_id',Auth::user()->id)->with('type')->get();
+                // $tour_count_by_type = $tours->groupBy('type.type_name')->map(function ($group) {
+                //     return $group->count(); 
+                // });
+             
+             }
+             $percent = [];
+             foreach ($tours as $tour) {
+                $type_name = $tour->type->type_name; // Lấy tên loại tour
+                $tour_id = $tour->id; // Lấy tour_id để khớp với $count
+        
+                // Kiểm tra nếu type_name đã tồn tại trong mảng, thì cộng dồn số lượng
+                if (isset($percent[$type_name])) {
+                    $percent[$type_name] += $percentageIncrease[$tour_id]; // Cộng dồn
+                } else {
+                    // Nếu chưa tồn tại, thì gán giá trị
+                    $percent[$type_name] = $percentageIncrease[$tour_id];
+                }
+            }
+     
+            return collect($percent)->map(function ($percentageIncrease, $type_name) {
+                return [
+                    'type_name' => $type_name,
+                    'percent' => $percentageIncrease,
+                ];
+            })->all();
+
+        }
+          
+        
+     }
     public function getTourSale(){
         $now=Carbon::now();
         $discounts = Discount::where('status', '!=', 0) ->where('end', '>=', $now) ->with('cate') ->orderBy('id', 'ASC')->get()->groupBy('category_id')->map(function ($group) {
@@ -68,8 +184,10 @@ class AppServiceProvider extends ServiceProvider
             $categories = $this->getCategoriesProduct();
             $banners=$this->getBanners();
             $statistics=$this->getStatistics();
+            $piedata=$this->getPieData();
+            $piedatamonth=$this->getPieDataMonth();
             $list_type_tour_sale=$this->getTourSale();
-            $view->with('categories',$categories)->with('banners',$banners)->with('statistics',$statistics)->with('list_type_tour_sale',$list_type_tour_sale);
+            $view->with('categories',$categories)->with('banners',$banners)->with('statistics',$statistics)->with('list_type_tour_sale',$list_type_tour_sale)->with('piedata',$piedata)->with('piedatamonth',$piedatamonth);
         });
     }
 }

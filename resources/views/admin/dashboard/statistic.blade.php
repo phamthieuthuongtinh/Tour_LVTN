@@ -105,7 +105,7 @@
                     <div class="card">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
-                                <h3 class="card-title">Luọng người đăng ký</h3>
+                                <h3 class="card-title">lượng người đăng ký</h3>
                                 <a href="javascript:void(0);">View Report</a>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Biểu đồ loại tour</h3>
+                            <h2 class="card-title" style="color: blue">Biểu đồ thống kê tour đã bán theo loại</h2>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -154,21 +154,37 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-7">
                                     <div class="chart-responsive">
-                                        <canvas id="pieChart" height="150"></canvas>
+                                        <canvas id="pieChart" height="278"></canvas>
                                     </div>
                                     <!-- ./chart-responsive -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-md-4">
-                                    <ul class="chart-legend clearfix">
-                                        <li><i class="far fa-circle text-danger"></i> Chrome</li>
-                                        <li><i class="far fa-circle text-success"></i> IE</li>
-                                        <li><i class="far fa-circle text-warning"></i> FireFox</li>
-                                        <li><i class="far fa-circle text-info"></i> Safari</li>
-                                        <li><i class="far fa-circle text-primary"></i> Opera</li>
-                                        <li><i class="far fa-circle text-secondary"></i> Navigator</li>
+                                <div class="col-md-5">
+                                    <h6>Tỉ lệ tăng tháng này</h6>
+                                    
+                                    <ul class="nav nav-pills flex-column">
+                                        @foreach($piedatamonth as $item)
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                {{ $item['type_name'] }}
+                                               
+                                                    @if ($item['percent']>0)
+                                                     <span class="float-right text-success">
+                                                        <i class="fas fa-arrow-up text-sm"></i>
+                                                        {{ $item['percent'] }}%</span>
+                                                    @else
+                                                    <span class="float-right text-warning">
+                                                        <i class="fas fa-arrow-left text-sm"></i>
+                                                        {{ $item['percent'] }}%</span>
+                                                    @endif
+                                                    
+                                                    
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                       
                                     </ul>
                                 </div>
                                 <!-- /.col -->
@@ -177,32 +193,7 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer p-0">
-                            <ul class="nav nav-pills flex-column">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        United States of America
-                                        <span class="float-right text-danger">
-                                            <i class="fas fa-arrow-down text-sm"></i>
-                                            12%</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        India
-                                        <span class="float-right text-success">
-                                            <i class="fas fa-arrow-up text-sm"></i> 4%
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        China
-                                        <span class="float-right text-warning">
-                                            <i class="fas fa-arrow-left text-sm"></i> 0% 
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
+                            
                         </div>
                         <!-- /.footer -->
                     </div>
