@@ -607,6 +607,114 @@
   });
 </script>
 
+<script>
+  $(document).ready(function(){
+    var ticksStyle = {
+      fontColor: '#495057',
+      fontStyle: 'bold'
+    }
+    var visitor = @json($visitor);
+    var business = @json($business);
+    var labels = [];
+    var datavisitor = [];
+    var databusiness = [];
+    var max=1;
+
+    Object.keys(visitor).forEach(function(month) {
+        labels.push(month); // Đưa tháng vào labels
+        datavisitor.push(visitor[month]); // Đưa tổng visitor của tháng vào datavisitor
+    });
+   
+    Object.keys(business).forEach(function(month) {
+         // Đưa tháng vào labels
+         databusiness.push(business[month]); // Đưa tổng visitor của tháng vào datavisitor
+    });
+    var combinedData = [...datavisitor, ...databusiness]; // Kết hợp 2 mảng
+
+    if (combinedData.length > 0) {
+        max = Math.max(...combinedData); // Lấy giá trị lớn nhất từ mảng kết hợp
+    }
+
+    console.log(max);
+    var mode = 'index'
+    var intersect = true
+  console.log(visitor);
+  console.log(databusiness);
+    var $visitorsChart = $('#visitors-chart')
+  // eslint-disable-next-line no-unused-vars
+  var visitorsChart = new Chart($visitorsChart, {
+    data: {
+      // labels:[1, 2, 3, 4, 5, 6, 7,8,9,10,11,12],
+      labels:labels,
+      datasets: [{
+        type: 'line',
+        data: datavisitor,
+        backgroundColor: 'transparent',
+        borderColor: '#007bff',
+        pointBorderColor: '#007bff',
+        pointBackgroundColor: '#007bff',
+        fill: false
+        // pointHoverBackgroundColor: '#007bff',
+        // pointHoverBorderColor    : '#007bff'
+      },
+      {
+        type: 'line',
+        data: databusiness,
+        backgroundColor: 'tansparent',
+        borderColor: '#ced4da',
+        pointBorderColor: '#ced4da',
+        pointBackgroundColor: '#ced4da',
+        fill: false
+        // pointHoverBackgroundColor: '#ced4da',
+        // pointHoverBorderColor    : '#ced4da'
+      }
+    ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips: {
+        mode: mode,
+        intersect: intersect
+      },
+      hover: {
+        mode: mode,
+        intersect: intersect
+      },
+      legend: {
+        display: false
+      },
+      scales: {
+        yAxes: [{
+          // display: false,
+          gridLines: {
+            display: true,
+            lineWidth: '4px',
+            color: 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks: $.extend({
+            beginAtZero: true,
+            suggestedMax: max,
+          }, ticksStyle)
+        }],
+        xAxes: [{
+          display: true,
+          gridLines: {
+            display: false
+          },
+          ticks: ticksStyle
+        }]
+      }
+    }
+  })
+  });
+   
+
+  
+
+  
+  
+</script>
 {{-- iput min=0 --}}
 <script>
   document.addEventListener('DOMContentLoaded', function() {

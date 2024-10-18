@@ -189,16 +189,35 @@
                                                     <th>Sơ sinh(<2 tuổi)</th>
                                                 </tr>
                                                 <tr>
-                                                    <td>Giá</td>
-                                                    <td>{{ number_format(($tour->price*(100-$sale->rate))/100) }}đ</td>
-                                                    <td>{{ number_format(($tour->price_treem*(100-$sale->rate))/100) }}đ</td>
-                                                    <td>{{ number_format(($tour->price_trenho*(100-$sale->rate))/100) }}đ</td>
-                                                    <td>{{ number_format(($tour->price_sosinh*(100-$sale->rate))/100) }}đ</td>
+                                                    <td>Giá 
+                                                        <br>
+                                                        (Giảm {{$sale->rate}}%)
+                                                    </td>
+                                                   
+                                                    
+                                                  
+                                                    <td><del class="text-muted">{{ number_format($tour->price) }} đ</del>
+                                                        <br>
+                                                        {{ number_format(($tour->price*(100-$sale->rate))/100) }}đ
+                                                    </td>
+                                                    <td>
+                                                        <del class="text-muted">{{ number_format($tour->price_treem) }} đ</del>
+                                                        <br>
+                                                        {{ number_format(($tour->price_treem*(100-$sale->rate))/100) }}
+                                                    </td>
+                                                    <td>
+                                                        <del class="text-muted">{{ number_format($tour->price_trenho) }} đ</del>
+                                                        <br>
+                                                        {{ number_format(($tour->price_trenho*(100-$sale->rate))/100) }}đ
+
+                                                    </td>
+                                                    <td>
+                                                        <del class="text-muted">{{ number_format($tour->price_sosinh) }} đ</del>
+                                                        <br>
+                                                        {{ number_format(($tour->price_sosinh*(100-$sale->rate))/100) }}đ
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Phụ thu phòng đơn</td>
-                                                    <td colspan="5" style="text-align: center">8.000.000 đ</td>
-                                                </tr>
+                                              
                                             </table>
                                         @else
                                             <table class="table table-bordered">
@@ -216,10 +235,9 @@
                                                     <td>{{ number_format($tour->price_trenho) }}đ</td>
                                                     <td>{{ number_format($tour->price_sosinh) }}đ</td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Phụ thu phòng đơn</td>
-                                                    <td colspan="5" style="text-align: center">8.000.000 đ</td>
-                                                </tr>
+
+
+                                             
                                             </table>
                                         @endif
                                     </div>
@@ -691,23 +709,24 @@
                                             </div>
                                             
                                             <div class="text-center p-4">
-                                               
-                                                @foreach ( $tour_sales as $key =>$dis )
-                                                    @if($re->id==$dis->tour_id)
-                                                        <h6>Giá từ: <del class="text-muted">{{ number_format($re->price) }} đ</del></h6>
-                                                        <h4 class="mb-0">
+                                                @php
+                                                // Mặc định là giá ban đầu
+                                                    $hasDiscount = false; 
+                                                    $discountedPrice = $re->price; 
         
-                                                        {{ number_format(($re->price*(100-$dis->rate))/100) }} đ
-                                                        </h4>
-                                                    @else
-                                                
-                                                        <h6>Giá từ:</h6>
-                                                        <h4 class="mb-0">
-                                                        
-                                                            {{ number_format($re->price) }} đ
-                                                        </h4>
-                                                    @endif
-                                                @endforeach
+                                                    // Kiểm tra và tính giá giảm nếu có
+                                                    foreach ($tour_sales as $dis) {
+                                                        if ($re->id == $dis->tour_id) {
+                                                            $discountedPrice = ($re->price * (100 - $dis->rate)) / 100; // Tính giá sau giảm
+                                                            $hasDiscount = true; // Đánh dấu là có giảm giá
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+        
+                                                <h6>Giá từ: @if($hasDiscount) <del class="text-muted">{{ number_format($re->price) }} đ</del> @endif</h6>
+                                                <h4 class="mb-0">{{ number_format($discountedPrice) }} đ</h4>
+                                               
                                                 <div class="mb-3">
                                                     @php
                                                         $fullStars = floor($re->avg_rating); // Số ngôi sao đầy đủ
@@ -752,6 +771,31 @@
                                                                 value="{{ $re->title }}">
                                                             <input type="hidden" id="wishlist_price{{ $re->id }}"
                                                                 value="{{ number_format($re->price) }} đ">
+                                                            @if($hasDiscount) 
+                                                                <input type="hidden" id="wishlist_sale{{ $re->id }}"
+                                                                    value="{{ number_format($discountedPrice) }}đ">
+                                                             @else
+                                                                <input type="hidden" id="wishlist_sale{{ $re->id }}"
+                                                                    value="0">
+                                                            @endif
+                                                            <input type="hidden" id="wishlist_tourfrom{{ $re->id }}"
+                                                                value="{{ $re->tour_from }} ">
+                                                            <input type="hidden" id="wishlist_songay{{ $re->id }}"
+                                                                value="{{$re->so_ngay}}N-">
+                                                            <input type="hidden" id="wishlist_sodem{{ $re->id }}"
+                                                                value="{{$re->so_dem}}Đ">
+                                                            <input type="hidden" id="wishlist_vehicle{{ $re->id }}"
+                                                                value="{{$re->vehicle }}">
+                                                             @if ($re->avg_rating>0)
+                                                                <input type="hidden" id="wishlist_rate{{ $re->id }}"
+                                                                        value="{{ $re->avg_rating }}">
+                                                                
+                                                            @else
+                                                                <input type="hidden" id="wishlist_rate{{ $re->id }}"
+                                                                    value="Chưa có">
+                                                            @endif
+                
+
                                                             <input type="hidden" id="wishlist_image{{ $re->id }}"
                                                                 src="{{ URL::to('upload/tours/' . $re->image) }}"
                                                                 value="{{ asset('upload/tours/' . $re->image) }}">

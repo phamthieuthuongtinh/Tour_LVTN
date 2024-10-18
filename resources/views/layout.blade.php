@@ -452,19 +452,19 @@
                                 alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="{{ asset('frontend/img/package-3.jpg') }}"
+                            <img class="img-fluid bg-light p-1" src="{{ asset('upload/tours/destination-229.jpg') }}"
                                 alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="{{ asset('frontend/img/package-1.jpg') }}"
+                            <img class="img-fluid bg-light p-1" src="{{ asset('upload/tours/destination-378.jpg') }}"
                                 alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="{{ asset('frontend/img/package-1.jpg') }}"
+                            <img class="img-fluid bg-light p-1" src="{{ asset('upload/tours/package-339.jpg') }}"
                                 alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="{{ asset('frontend/img/package-1.jpg') }}"
+                            <img class="img-fluid bg-light p-1" src="{{ asset('upload/tours/uio.jpg') }}"
                                 alt="">
                         </div>
                     </div>
@@ -507,7 +507,7 @@
     <div class="container">
         <!-- Modal -->
         <div class="modal fade" id="sosanh" role="dialog">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
 
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -522,6 +522,10 @@
                                     <th witdh="500px">Tên</th>
                                     <th>Giá</th>
                                     <th>Ảnh</th>
+                                    <th>Điểm đi</th>
+                                    <th>Thời gian</th>
+                                    <th>Phương tiện</th>
+                                    <th>Đánh giá</th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -1271,16 +1275,27 @@
                 for ( var i = 0; i < data.length; i++) {
                     var title = data[i].title;
                     var price = data[i].price;
+
+                    var tour_from = data[i].tour_from;
+                    var so_ngay = data[i].so_ngay;
+                    var so_dem = data[i].so_dem;
+                    var vehicle = data[i].vehicle;
+                    var rate = data[i].rate;
+                    var sale = data[i].sale;
+
                     var image = data[i].image;
                     var url = data[i].url;
                     var id = data[i].id;
                     // Thêm hàng vào bảng
                     $('#row_compare').find('tbody').append(`
                        <tr id="row_compare`+id+`">
-                            <td  width="400px">`+title+`</td>
-                            <td>`+price+`</td>
-                            <td><img width="100px" src="`+image+`"></td>
-                         
+                            <td  width="300px">`+title+`</td>
+                            <td>`+ (sale != 0 ? `<del>` + price + `</del><br><span class="text-danger">` + sale + `</span>` : price) + `</td>
+                            <td><img width="100px" height="67px" src="`+image+`"></td>
+                            <td>`+tour_from+`</td>
+                            <td>`+so_ngay+so_dem+`</td>
+                            <td>`+vehicle+`</td>
+                           <td>`+ (rate > 0 ? rate + `<i class="fa fa-star"></i>` : rate) + `</td>
                             <td><a href="`+url+`"><i class="fa fa-eye" title="Xem chi tiết"></i></a><br></td>
                             <td onclick="delete_compare(`+id+`)"><a style="cursor:pointer;"><i class="fa fa-trash" title="Xóa"></i></a></td>
                         </tr>
@@ -1293,16 +1308,31 @@
         function add_compare(tour_id) {
             // document.getElementById('title-compare').innerText='Chỉ cho phép so sánh tối đa 5 tour';
             var id = tour_id;
-            var title = document.getElementById('wishlist_title' + id).value;  // Sửa 'name' thành 'title'
+            var title = document.getElementById('wishlist_title' + id).value; 
             var price = document.getElementById('wishlist_price' + id).value;
             var image = document.getElementById('wishlist_image' + id).value;
             var url = document.getElementById('wishlist_url' + id).value;
-    
+
+            var tour_from = document.getElementById('wishlist_tourfrom' + id).value;
+            var so_ngay = document.getElementById('wishlist_songay' + id).value;
+            var so_dem = document.getElementById('wishlist_sodem' + id).value;
+            var vehicle = document.getElementById('wishlist_vehicle' + id).value;
+            var rate = document.getElementById('wishlist_rate' + id).value;
+            var sale = document.getElementById('wishlist_sale' + id).value;
+
             var newItem = {
                 'url': url,
                 'id': id,
-                'title': title,  // Sửa 'name' thành 'title'
+                'title': title, 
                 'image': image,
+
+                'tour_from': tour_from,
+                'so_ngay': so_ngay,
+                'so_dem': so_dem,
+                'vehicle': vehicle,
+                'rate': rate,
+                'sale': sale,
+
                 'price': price
             };
             
@@ -1322,10 +1352,13 @@
                     old_data.push(newItem);
                     $('#row_compare').find('tbody').append(`
                       <tr id="row_compare`+id+`">
-                            <td  width="400px">`+title+`</td>
-                            <td>`+price+`</td>
-                            <td><img width="100px" src="`+image+`"></td>
-                          
+                            <td  width="300px">`+title+`</td>
+                            <td>`+ (sale != 0 ? `<del>` + price + `</del><br><span class="text-danger">` + sale + `</span>` : price) + `</td>
+                            <td><img width="100px"  height="67px" src="`+image+`"></td>
+                            <td>`+tour_from+`</td>
+                            <td>`+so_ngay+so_dem+`</td>
+                            <td>`+vehicle+`</td>
+                            <td>`+ (rate > 0 ? rate + `<i class="fa fa-star"></i>` : rate) + `</td>
                             <td><a href="`+url+`"><i class="fa fa-eye" title="Xem chi tiết"></i></a><br></td>
                             <td onclick="delete_compare(`+id+`)"><a style="cursor:pointer;"><i class="fa fa-trash" title="Xóa"></i></a></td>
                         </tr>

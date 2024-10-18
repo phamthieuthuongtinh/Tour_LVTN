@@ -69,10 +69,52 @@
                                                 $isLiked = $likes->contains('tour_id', $recom->id);
                                             }
                                         @endphp
+                                        <form>
+                                            @csrf
+                                            <input type="hidden" id="wishlist_title{{ $recom->id }}"
+                                                value="{{ $recom->title }}">
+                                            <input type="hidden" id="wishlist_price{{ $recom->id }}"
+                                                value="{{ number_format($recom->price) }} đ">
+        
+                                                @if($hasDiscount) 
+                                                <input type="hidden" id="wishlist_sale{{ $recom->id }}"
+                                                    value="{{ number_format($discountedPrice) }}đ">
+                                                @else
+                                                <input type="hidden" id="wishlist_sale{{ $recom->id }}"
+                                                    value="0">
+                                                @endif
+                                            <input type="hidden" id="wishlist_tourfrom{{ $recom->id }}"
+                                                value="{{$recom->tour_from }} ">
+                                            <input type="hidden" id="wishlist_songay{{ $recom->id }}"
+                                                value="{{$recom->so_ngay}}N-">
+                                            <input type="hidden" id="wishlist_sodem{{ $recom->id }}"
+                                                value="{{$recom->so_dem}}Đ">
+                                            <input type="hidden" id="wishlist_vehicle{{ $recom->id }}"
+                                                value="{{$recom->vehicle }}">
+                                             @if ($recom->avg_rating>0)
+                                                <input type="hidden" id="wishlist_rate{{ $recom->id }}"
+                                                        value="{{ $recom->avg_rating }}">
+                                                
+                                            @else
+                                                <input type="hidden" id="wishlist_rate{{ $recom->id }}"
+                                                    value="Chưa có">
+                                            @endif
+        
+                                            <input type="hidden" id="wishlist_image{{ $recom->id }}"
+                                                src="{{ URL::to('upload/tours/' . $recom->image) }}"
+                                                value="{{ asset('upload/tours/' . $recom->image) }}">
+                                            <input type="hidden" id="wishlist_url{{ $recom->id }}"
+                                                value="{{ route('chi-tiet-tour', ['slug' => $recom->slug]) }}">
+                                        </form>
                                         <div class="d-flex justify-content-center mb-2">
                                             <a href="{{ route('chi-tiet-tour', ['slug' => $recom->slug]) }}"
-                                                class="btn btn-sm btn-primary px-3 border-end"
+                                                class="btn btn-sm btn-primary px-3 border-end mx-2"
                                                 style="border-radius: 30px;">Chi tiết</a>
+                                                <a href="#" onclick="add_compare({{ $recom->id }})"
+                                                    class="btn btn-sm btn-primary px-3 border-end mx-2"
+                                                    style="border-radius: 30px;"><i class="fa fa-plus"></i> So sánh
+            
+                                                </a>
                                             <form action="{{ route('tour.like') }}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="customer_id" class="customer_id"
@@ -195,105 +237,143 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Gói Tour</h6>
-                <h1 class="mb-5">Các Gói Tour Nổi Bật</h1>
+                <h1 class="mb-5">Các Tour Mới</h1>
             </div>
             <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="package-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset('frontend/img/package-1.jpg') }}" alt="">
-                        </div>
-                        <div class="d-flex border-bottom">
-                            <small class="flex-fill text-center border-end py-2"><i
-                                    class="fa fa-map-marker-alt text-primary me-2"></i>Thái Lan</small>
-                            <small class="flex-fill text-center border-end py-2"><i
-                                    class="fa fa-calendar-alt text-primary me-2"></i>3 ngày</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>2
-                                người</small>
-                        </div>
-                        <div class="text-center p-4">
-                            <h3 class="mb-0">3.000.000 VNĐ</h3>
-                            <div class="mb-3">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
+                @foreach ($tour_hot as $key=>$tour )
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="package-item">
+                            <div class="overflow-hidden">
+                                <img style="width:456px; height:260px;" class="img-fluid"
+                                    src="{{ asset('upload/tours/' . $tour->image) }}" alt="">
                             </div>
-                            <p><u>Du lịch Thái Lan</u></p>
-                            <div class="d-flex justify-content-center mb-2">
-                                <a href="#" class="btn btn-sm btn-primary px-3 border-end"
-                                    style="border-radius: 30px 0 0 30px;">Chi tiết</a>
-                                <a href="#" class="btn btn-sm btn-primary px-3"
-                                    style="border-radius: 0 30px 30px 0;">Đặt ngay</a>
+                            <div class="d-flex border-bottom flex-wrap">
+                                <small class="flex-fill text-center border-end border-bottom py-2"><i class="fa fa-mountain text-primary me-2"></i>{{ $tour->type->type_name }}</small>
+                                <small class="flex-fill text-center border-end border-bottom py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>{{ $tour->so_ngay }} Ngày - {{ $tour->so_ngay }}</small>
+                                
+                                <small class="flex-fill text-center py-2 w-100"><i class="fa fa-plane text-primary me-2"></i>{{ $tour->tour_from }}</small>
+                            </div>
+                            <div class="text-center p-4">
+                                @php
+                                // Mặc định là giá ban đầu
+                                    $hasDiscount_2 = false; 
+                                    $discountedPrice_2 = $tour->price; 
+
+                                    // Kiểm tra và tính giá giảm nếu có
+                                    foreach ($tour_hot_sales as $dis) {
+                                        if ($tour->id == $dis->tour_id) {
+                                            $discountedPrice_2 = ($tour->price * (100 - $dis->rate)) / 100; // Tính giá sau giảm
+                                            $hasDiscount_2 = true; // Đánh dấu là có giảm giá
+                                            break;
+                                        }
+                                    }
+                                @endphp
+
+                                <h6>Giá từ: @if($hasDiscount_2) <del class="text-muted">{{ number_format($tour->price) }} đ</del> @endif</h6>
+                                <h4 class="mb-0">{{ number_format($discountedPrice_2) }} đ</h4>
+
+
+
+                                <div class="">
+                                    @php
+                                        $fullStars = floor($tour->avg_rating); // Số ngôi sao đầy đủ
+                                        $halfStar = $tour->avg_rating - $fullStars >= 0.5 ? true : false; // Kiểm tra có nửa sao không
+                                    @endphp
+                                    {{-- Vẽ các ngôi sao đầy đủ --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <small class="fa fa-star text-primary"></small>
+                                    @endfor
+
+                                    {{-- Vẽ nửa ngôi sao nếu có --}}
+                                    @if ($halfStar)
+                                        <small class="fa fa-star-half-alt text-primary"></small>
+                                    @endif
+
+                                    {{-- Các ngôi sao còn lại (rỗng) --}}
+                                    @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
+                                        <small class="fa fa-star text-bray"></small>
+                                    @endfor
+                                </div>
+
+                                <p style="">{{ mb_substr($tour->title, 0, 60) . '...' }}</p>
+                                @php
+                                    if (Session::get('customer_id')) {
+                                        $isLiked = $likes->contains('tour_id', $tour->id);
+                                    }
+                                @endphp
+                                <div class="row">
+
+                                </div>
+                                <form>
+                                    @csrf
+                                    <input type="hidden" id="wishlist_title{{ $tour->id }}"
+                                        value="{{ $tour->title }}">
+                                    <input type="hidden" id="wishlist_price{{ $tour->id }}"
+                                        value="{{ number_format($tour->price) }} đ">
+                                    @if($hasDiscount_2) 
+                                        <input type="hidden" id="wishlist_sale{{ $tour->id }}"
+                                            value="{{ number_format($discountedPrice_2) }}đ">
+                                        @else
+                                        <input type="hidden" id="wishlist_sale{{ $tour->id }}"
+                                            value="0">
+                                        @endif
+                                    <input type="hidden" id="wishlist_tourfrom{{ $tour->id }}"
+                                        value="{{$tour->tour_from }} ">
+                                    <input type="hidden" id="wishlist_songay{{ $tour->id }}"
+                                        value="{{$tour->so_ngay}}N-">
+                                    <input type="hidden" id="wishlist_sodem{{ $tour->id }}"
+                                        value="{{$tour->so_dem}}Đ">
+                                    <input type="hidden" id="wishlist_vehicle{{ $tour->id }}"
+                                        value="{{$tour->vehicle}}">
+                                     @if ($tour->avg_rating>0)
+                                        <input type="hidden" id="wishlist_rate{{ $tour->id }}"
+                                                value="{{ $tour->avg_rating }}">
+                                        
+                                    @else
+                                        <input type="hidden" id="wishlist_rate{{ $tour->id }}"
+                                            value="Chưa có">
+                                    @endif
+
+                                    <input type="hidden" id="wishlist_image{{ $tour->id }}"
+                                        src="{{ URL::to('upload/tours/' . $tour->image) }}"
+                                        value="{{ asset('upload/tours/' . $tour->image) }}">
+                                    <input type="hidden" id="wishlist_url{{ $tour->id }}"
+                                        value="{{ route('chi-tiet-tour', ['slug' => $tour->slug]) }}">
+                                </form>
+                                <div class="d-flex justify-content-center mb-2">
+
+                                    <a href="{{ route('chi-tiet-tour', ['slug' => $tour->slug]) }}"
+                                        class="btn btn-sm btn-primary px-3 border-end mx-2"
+                                        style="border-radius: 30px;">Chi tiết
+                                    </a>
+                                    <a href="#" onclick="add_compare({{ $tour->id }})"
+                                        class="btn btn-sm btn-primary px-3 border-end "
+                                        style="border-radius: 30px;"><i class="fa fa-plus"></i> So sánh
+
+                                    </a>
+
+                                    <form action="{{ route('tour.like') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="customer_id" class="customer_id"
+                                            value="{{ Session::get('customer_id') }}" id="customer_id">
+                                        @if (Session::get('customer_id'))
+                                            <button class="favorite-button btn btn-sm ms-2"
+                                                data-tour-id="{{ $tour->id }}">
+                                                <i style="font-size: 18px; color: {{ $isLiked ? 'red' : 'black' }};"
+                                                    class="fa fa-heart"></i>
+                                            </button>
+                                        @else
+                                            <button class="favorite-button btn btn-sm ms-2"
+                                                data-tour-id="{{ $tour->id }}">
+                                                <i style="font-size: 18px" class="fa fa-heart"></i>
+                                            </button>
+                                        @endif
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="package-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset('frontend/img/package-2.jpg') }}" alt="">
-                        </div>
-                        <div class="d-flex border-bottom">
-                            <small class="flex-fill text-center border-end py-2"><i
-                                    class="fa fa-map-marker-alt text-primary me-2"></i>Indonesia</small>
-                            <small class="flex-fill text-center border-end py-2"><i
-                                    class="fa fa-calendar-alt text-primary me-2"></i>3 ngày</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>2
-                                người</small>
-                        </div>
-                        <div class="text-center p-4">
-                            <h3 class="mb-0">3.000.000 VNĐ</h3>
-                            <div class="mb-3">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                            </div>
-                            <p>Du lịch Indonesia</p>
-                            <div class="d-flex justify-content-center mb-2">
-                                <a href="#" class="btn btn-sm btn-primary px-3 border-end"
-                                    style="border-radius: 30px 0 0 30px;">Chi tiết</a>
-                                <a href="#" class="btn btn-sm btn-primary px-3"
-                                    style="border-radius: 0 30px 30px 0;">Đặt ngay</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="package-item">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset('frontend/img/package-3.jpg') }}" alt="">
-                        </div>
-                        <div class="d-flex border-bottom">
-                            <small class="flex-fill text-center border-end py-2"><i
-                                    class="fa fa-map-marker-alt text-primary me-2"></i>Malaysia</small>
-                            <small class="flex-fill text-center border-end py-2"><i
-                                    class="fa fa-calendar-alt text-primary me-2"></i>3 ngày</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>2
-                                người</small>
-                        </div>
-                        <div class="text-center p-4">
-                            <h3 class="mb-0">3.500.000 VNĐ</h3>
-                            <div class="mb-3">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                            </div>
-                            <p>Du lịch Malaisia</p>
-                            <div class="d-flex justify-content-center mb-2">
-                                <a href="#" class="btn btn-sm btn-primary px-3 border-end"
-                                    style="border-radius: 30px 0 0 30px;">Chi tiết</a>
-                                <a href="#" class="btn btn-sm btn-primary px-3"
-                                    style="border-radius: 0 30px 30px 0;">Đặt ngay</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

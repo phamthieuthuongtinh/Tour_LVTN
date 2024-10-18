@@ -27,6 +27,25 @@ use function PHPUnit\Framework\isEmpty;
 class IndexController extends Controller
 {
     public function index(){
+        //Tour noi bat
+        $tour_hot=Tour::where('status',3)->orderBy('id','DESC')->get()->take(4);
+        $tour_hot_id_sale=$tour_hot->pluck('id')->toArray();
+        $tour_hot_sales=Discount::whereIn('tour_id',$tour_hot_id_sale)->get();
+        $rating=Rating::whereIn('tour_id',$tour_hot_id_sale)->get();
+        $groupedRatings = $rating->groupBy('tour_id');
+        $avg_rating = $groupedRatings->map(function ($group) {
+            return $group->avg('rating');
+        });
+                
+
+        foreach ($tour_hot as $tour) {
+             // Nếu tour_id có trong danh sách tính trung bình đánh giá, gán avg_rating cho tour
+            $tourId = $tour->id; // Hoặc $tour->tour_id nếu cần
+            // Nếu tour_id có trong danh sách tính trung bình đánh giá, gán avg_rating cho tour
+            $tour->avg_rating = isset($avg_rating[$tourId]) ? $avg_rating[$tourId] : 0;
+                
+        }
+    
         // list tour sale
         $list_tour_sales=Discount::where('status',1)->get();
         $sortedCateCounts = $list_tour_sales->groupBy('tour.category_id')->map(function ($group) {
@@ -107,10 +126,10 @@ class IndexController extends Controller
                     $tour->avg_rating = isset($avg_rating[$tourId]) ? $avg_rating[$tourId] : 0;
                 
                 }
-            return view('pages.home',compact('recommends','likes','tour_sales','types'));
+            return view('pages.home',compact('recommends','likes','tour_sales','types','tour_hot','tour_hot_sales'));
         }  
         else{
-            return view('pages.home',compact('types'));
+            return view('pages.home',compact('types','tour_hot','tour_hot_sales'));
         }      
     }
     // Xử lý ngôn ngữ tự nhiên NLP

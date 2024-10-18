@@ -127,6 +127,30 @@
                                                 value="{{ $tour->title }}">
                                             <input type="hidden" id="wishlist_price{{ $tour->id }}"
                                                 value="{{ number_format($tour->price) }} đ">
+
+                                            @if($hasDiscount) 
+                                                <input type="hidden" id="wishlist_sale{{ $tour->id }}"
+                                                    value="{{ number_format($discountedPrice) }}đ">
+                                            @else
+                                                <input type="hidden" id="wishlist_sale{{ $tour->id }}"
+                                                    value="0">
+                                            @endif    
+                                            <input type="hidden" id="wishlist_tourfrom{{ $tour->id }}"
+                                                value="{{$tour->tour_from}} ">
+                                            <input type="hidden" id="wishlist_songay{{ $tour->id }}"
+                                                value="{{$tour->so_ngay}}N-">
+                                            <input type="hidden" id="wishlist_sodem{{ $tour->id }}"
+                                                value="{{$tour->so_dem}}Đ">
+                                            <input type="hidden" id="wishlist_vehicle{{ $tour->id }}"
+                                                value="{{ $tour->vehicle }}">
+                                            @if ($tour->avg_rating>0)
+                                                <input type="hidden" id="wishlist_rate{{ $tour->id }}"
+                                                        value="{{ $tour->avg_rating }}">  
+                                            @else
+                                                <input type="hidden" id="wishlist_rate{{ $tour->id }}"
+                                                    value="Chưa có">
+                                            @endif
+
                                             <input type="hidden" id="wishlist_image{{ $tour->id }}"
                                                 src="{{ URL::to('upload/tours/' . $tour->image) }}"
                                                 value="{{ asset('upload/tours/' . $tour->image) }}">

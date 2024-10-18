@@ -35,7 +35,7 @@ class CustomerController extends Controller
             if( $customer->hobby!=null){
                 $recommend= Recommend::where('customer_id',$customer->customer_id)->first();
                
-                if($recommend->created_at){
+                if($recommend!=null && $recommend->created_at){
                     $currentDate = now();
                     $createdAt = $recommend->updated_at;
 
@@ -52,6 +52,22 @@ class CustomerController extends Controller
                         $recommend->recommend = $recommendTourIdsString;
                         $recommend->save();
                     }
+                }
+                if($recommend==null){
+                    $customerPreference=$customer->hobby;
+                    $result = $this->analyzePreferences($customerPreference);
+                 
+                   
+                    $typeIds = Type::whereIn('type_name', $result)->pluck('id');
+                    $recommends = Tour::whereIn('type_id', $typeIds)->get();
+                    $recommendTourIds = $recommends->pluck('id')->toArray(); // Get array of tour IDs
+                    // Convert the array to a comma-separated string
+                    $recommendTourIdsString = implode(',', $recommendTourIds);
+                    $recommend2=new Recommend();
+                    $recommend2->customer_id= $customer->customer_id;
+                    
+                    $recommend2->recommend = $recommendTourIdsString;
+                    $recommend2->save();
                 }
             }
 
