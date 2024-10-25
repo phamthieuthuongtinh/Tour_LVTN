@@ -53,6 +53,7 @@
             <p class="success-card-text">Giao dịch của bạn đã được xử lý thành công. Bạn sẽ nhận được một email thông tin về đơn hàng trong ít phút tới.</p>
             <p class="success-card-text">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email hoặc số điện thoại hỗ trợ.</p>
             <a href="/" class="success-button">Quay lại trang chủ</a>
+            <a href="{{ route('customers.ordered', Session::get('customer_id')) }}" class="success-button">Xem tour đã đặt</a>
         </div>
     </div>
 @endsection

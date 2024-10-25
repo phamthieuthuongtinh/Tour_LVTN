@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\Departure;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Session;
@@ -13,6 +14,7 @@ use App\Models\Recommend;
 use App\Models\Like;
 use App\Models\Tour;
 use App\Models\Type;
+use App\Models\Member;
 use Carbon\Carbon;
 class CustomerController extends Controller
 {
@@ -87,12 +89,33 @@ class CustomerController extends Controller
         return view('admin.customers.infor_customer',compact('customer'));
     }
     public function ordered(string $id){
+        $customer=Customer::where('customer_id',$id)->first();
         $ordereds=Order::where('customer_id',$id)->where('order_status','!=',0)->get();
         $order_codes = $ordereds->pluck('order_code')->toArray();
         $orderdetails = OrderDetail::whereIn('order_code', $order_codes)->with('tour')->with('order')->with('coupon')->get();
-        return view('admin.customers.ordered_customer',compact('ordereds','orderdetails'));
-    }
+        $now = Carbon::now();
+        // Danh sách thành viên cho các đơn
+        foreach($orderdetails as $ord){
+           
+            $quantity= $ord->nguoi_lon + $ord->tre_em + $ord->tre_nho + $ord->so_sinh;
+            $members = Member::where('order_code', $ord->order_code)->where('status',1)->get();
+            $departure = Departure::where('tour_id', $ord->tour_id)->where('status',1)->where('quantity','>=',$quantity)->where('departure_date','>',$now)->orderby('departure_date','ASC')->get();
+            $ord->members = $members;
+            $ord->departure = $departure;
 
+        }
+       
+        return view('admin.customers.ordered_customer',compact('ordereds','orderdetails','customer','now'));
+    }
+    public function update_order_date(Request $request,string $id){
+        $order = Orderdetail::where('order_code',$id)->first();
+
+        // Cập nhật ngày khởi hành
+        $order->departure_date = $request->input('departure_date');
+        $order->save();
+    
+        return response()->json(['success' => true]);
+    }
     public function liked(string $id){
         $likes=Like::where('customer_id',$id)->with('tour')->get();
         return view('admin.customers.liked_customer',compact('likes'));

@@ -14,6 +14,8 @@ use App\Models\Itinerary;
 use App\Models\Service;
 use App\Models\Like;
 use App\Models\Discount;
+use App\Models\Order;
+use App\Models\Orderdetail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -358,11 +360,14 @@ class ToursController extends Controller
             // });
             //  dd( $relate);
         $tour_sales=Discount::whereIn('tour_id',$rating_tour_id)->get();
-        
+        $ordered=[];
         $customer_id=Session::get('customer_id');
+        $ordered=Order::where('customer_id',$customer_id)->where('order_status',2)->get();
+        $order_codes = $ordered->pluck('order_code')->toArray();
+        $orderedetails = OrderDetail::whereIn('order_code', $order_codes)->with('tour')->with('order')->with('coupon')->get();
         $likes=Like::where('customer_id',$customer_id)->get();
         $gallery=Gallery::orderBy('id','DESC')->get();
-        return view('pages.detailtour',compact('tour','departures','nearestDeparture','comments','reply','ratings','itineraries','service','relate','likes','gallery','tour_sales','sale'));
+        return view('pages.detailtour',compact('tour','departures','nearestDeparture','comments','reply','ratings','itineraries','service','relate','likes','gallery','tour_sales','sale','orderedetails'));
     }
     
     public function gui_duyet(String $id){

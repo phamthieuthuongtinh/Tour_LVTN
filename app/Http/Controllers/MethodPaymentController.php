@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tour;
-use App\Models\Category;
+use App\Models\Member;
 use App\Models\Order;
 use App\Models\Orderdetail;
 use App\Models\Statistical;
@@ -51,6 +51,80 @@ class MethodPaymentController extends Controller
         $order_details->sale = $data['sale'];
         $order_details->departure_date = $data['departure_date'];
         $order_details->save();
+        // lưu tt thành viên
+        $adultMembers = $request->input('adult_members');
+       
+        $childMembers = $request->input('child_members');
+        $toddlerMembers = $request->input('toddler_members');
+        $infantMembers = $request->input('infant_members'); 
+       
+        $departure_id=Departure::where('tour_id',$data['tour_id'])->where('departure_date',$data['departure_date'])->first();
+        if($data['payment_method']=='COD' || $data['payment_method']=='BANK'){
+            $update_quantity= $data['nguoi_lon'] + $data['tre_em'] + $data['tre_nho'] + $data['so_sinh'];
+            $departure_id->quantity= $departure_id->quantity -$update_quantity;
+            $departure_id->save();
+        }
+        if (!empty($adultMembers)) {
+            foreach ($adultMembers as $adult) {
+               $member= new Member();
+               $member->departure_id=$departure_id->id;
+               $member->order_code=$txnRef;
+               $member->tour_id=$data['tour_id'];
+               $member->name=$adult['name'];
+               $member->cccd=$adult['cccd'];
+               $member->phone=$adult['phone'];
+               $member->note=$adult['note'];
+               $member->loai=1;
+               $member->status=1;
+               $member->save();
+            }
+        }
+       
+        // Lưu thông tin trẻ em vào cơ sở dữ liệu
+        if (!empty($childMembers)) {
+            foreach ($childMembers as $child) {
+                $member_child= new Member();
+               $member_child->departure_id= $departure_id->id;
+               $member_child->order_code=$txnRef;
+               $member_child->tour_id=$data['tour_id'];
+               $member_child->name=$child['name'];
+               $member_child->note=$child['note'];
+               $member_child->loai=2;
+               $member_child->status=1;
+               $member_child->save();
+            }
+        }
+    
+        // Lưu thông tin trẻ nhỏ vào cơ sở dữ liệu
+        if (!empty($toddlerMembers)) {
+            foreach ($toddlerMembers as $toddler) {
+                $member_toddler= new Member();
+                $member_toddler->departure_id=$departure_id->id;
+                $member_toddler->order_code=$txnRef;
+                $member_toddler->tour_id=$data['tour_id'];
+                $member_toddler->name=$toddler['name'];
+                $member_toddler->note=$toddler['note'];
+                $member_toddler->loai=3;
+                $member_toddler->status=1;
+                $member_toddler->save();
+            }
+        }
+    
+        // Lưu thông tin sơ sinh vào cơ sở dữ liệu
+        if (!empty($infantMembers)) {
+            foreach ($infantMembers as $infant) {
+                $member_infant= new Member();
+                $member_infant->departure_id=$departure_id->id;
+                $member_infant->order_code=$txnRef;
+                $member_infant->tour_id=$data['tour_id'];
+                $member_infant->name=$infant['name'];
+                $member_infant->note=$infant['note'];
+                $member_infant->loai=4;
+                $member_infant->status=1;
+                $member_infant->save();
+            }
+        }
+        // lưu tt thành viên
 
         Session::forget('voucher');
         $order_id = $order->order_id;
@@ -418,7 +492,80 @@ class MethodPaymentController extends Controller
          $order_details->sale = $data['sale'];
          $order_details->departure_date = $data['departure_date'];
          $order_details->save();
- 
+        // lưu tt thành viên
+        $adultMembers = $request->input('adult_members');
+            
+        $childMembers = $request->input('child_members');
+        $toddlerMembers = $request->input('toddler_members');
+        $infantMembers = $request->input('infant_members'); 
+
+        $departure_id=Departure::where('tour_id',$data['tour_id'])->where('departure_date',$data['departure_date'])->first();
+        if($data['payment_method']=='COD' || $data['payment_method']=='BANK'){
+            $update_quantity= $data['nguoi_lon'] + $data['tre_em'] + $data['tre_nho'] + $data['so_sinh'];
+            $departure_id->quantity= $departure_id->quantity -$update_quantity;
+            $departure_id->save();
+        }
+        if (!empty($adultMembers)) {
+            foreach ($adultMembers as $adult) {
+                $member= new Member();
+                $member->departure_id=$departure_id->id;
+                $member->order_code=$txnRef;
+                $member->tour_id=$data['tour_id'];
+                $member->name=$adult['name'];
+                $member->cccd=$adult['cccd'];
+                $member->phone=$adult['phone'];
+                $member->note=$adult['note'];
+                $member->loai=1;
+                $member->status=1;
+                $member->save();
+            }
+        }
+
+        // Lưu thông tin trẻ em vào cơ sở dữ liệu
+        if (!empty($childMembers)) {
+            foreach ($childMembers as $child) {
+                $member_child= new Member();
+                $member_child->departure_id= $departure_id->id;
+                $member_child->order_code=$txnRef;
+                $member_child->tour_id=$data['tour_id'];
+                $member_child->name=$child['name'];
+                $member_child->note=$child['note'];
+                $member_child->loai=2;
+                $member_child->status=1;
+                $member_child->save();
+            }
+        }
+
+        // Lưu thông tin trẻ nhỏ vào cơ sở dữ liệu
+        if (!empty($toddlerMembers)) {
+            foreach ($toddlerMembers as $toddler) {
+                $member_toddler= new Member();
+                $member_toddler->departure_id=$departure_id->id;
+                $member_toddler->order_code=$txnRef;
+                $member_toddler->tour_id=$data['tour_id'];
+                $member_toddler->name=$toddler['name'];
+                $member_toddler->note=$toddler['note'];
+                $member_toddler->loai=3;
+                $member_toddler->status=1;
+                $member_toddler->save();
+            }
+        }
+
+        // Lưu thông tin sơ sinh vào cơ sở dữ liệu
+        if (!empty($infantMembers)) {
+            foreach ($infantMembers as $infant) {
+                $member_infant= new Member();
+                $member_infant->departure_id=$departure_id->id;
+                $member_infant->order_code=$txnRef;
+                $member_infant->tour_id=$data['tour_id'];
+                $member_infant->name=$infant['name'];
+                $member_infant->note=$infant['note'];
+                $member_infant->loai=4;
+                $member_infant->status=1;
+                $member_infant->save();
+            }
+        }
+        // lưu tt thành viên
          Session::forget('voucher');
          $order_id = $order->order_id;
  

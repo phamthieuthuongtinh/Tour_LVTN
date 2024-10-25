@@ -85,7 +85,7 @@ class CommentController extends Controller
             $comment->comment_content = $data['comment_content'];
             $comment->comment_tour_id = $data['comment_tour_id'];
             $comment->customer_id = $data['customer_id'];
-            $comment->status = 0;
+            $comment->status = 1;
             $comment->save();
             $commentId = $comment->comment_id;
         }

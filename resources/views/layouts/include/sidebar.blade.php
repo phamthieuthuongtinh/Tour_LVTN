@@ -183,19 +183,19 @@
                         <ul class="nav nav-treeview pl-4">
                             <li class="nav-item">
                                 <a href="{{ route('comment.index') }}" class="nav-link all-cmt">
-                                    <i class="fa-solid fa-check"></i>
-                                    <p>Duyệt đánh giá</p>
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <p>Yêu cầu xử lý</p>
                                 </a>
                             </li>
                         </ul>
-                        <ul class="nav nav-treeview pl-4">
+                        {{-- <ul class="nav nav-treeview pl-4">
                             <li class="nav-item">
                                 <a href="{{ route('comment.create') }}" class="nav-link create-cmt">
                                     <i class="fa-solid fa-comment-dots"></i>
                                     <p>Phản hồi đánh giá</p>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> --}}
                     </li>
                     <li class="nav-item menu-order">
                         <a href="{{ route('orders.index') }}" class="nav-link">

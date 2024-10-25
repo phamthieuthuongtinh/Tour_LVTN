@@ -314,15 +314,29 @@ class IndexController extends Controller
         }
         $tours=$tours_get;
         // Thực hiện truy vấn và lấy kết quả
-       
+        $tour_id_sale=$tours->pluck('id')->toArray();
+        $tour_sales=Discount::whereIn('tour_id',$tour_id_sale)->get();
+        $rating=Rating::whereIn('tour_id',$tour_id_sale)->get();
+        $groupedRatings = $rating->groupBy('tour_id');
+        $avg_rating = $groupedRatings->map(function ($group) {
+            return $group->avg('rating');
+        });
+        foreach ($tours as $tour) {
+            // Nếu tour_id có trong danh sách tính trung bình đánh giá, gán avg_rating cho tour
+           $tourId = $tour->id; // Hoặc $tour->tour_id nếu cần
+           // Nếu tour_id có trong danh sách tính trung bình đánh giá, gán avg_rating cho tour
+           $tour->avg_rating = isset($avg_rating[$tourId]) ? $avg_rating[$tourId] : 0;
+               
+       }
+   
         if(Session::get('customer_id')){
             $customer_id=Session::get('customer_id');
             $likes=Like::where('customer_id',$customer_id)->get();
-            return view('pages.search',compact('tours','likes'));
+            return view('pages.search',compact('tours','likes','tour_sales'));
            
         }
        else{
-            return view('pages.search',compact('tours'));
+            return view('pages.search',compact('tours','tour_sales'));
        }
     }
 

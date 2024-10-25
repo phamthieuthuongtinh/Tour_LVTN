@@ -666,10 +666,61 @@
                             var tre_nho = $('.tre_nho').val();
                             var so_sinh = $('.so_sinh').val();
                             var voucher = $('.voucher').val();
-                            var departure_date = $('.departure_date').val();
+                            var departure_date = $('.departure_date:checked').val();
+                            if (!departure_date) {
+                                alert('Bạn chưa chọn ngày khởi hành!');
+                               
+                            } 
                             var sale = $('.tour-sale').val();
                             var _token = $('input[name="_token"]').val();
                             var url = '';
+                             // Lấy thông tin từ các thành viên
+                             var adultMembers = [];
+                            $('.adult-member').each(function() {
+                                var adultName = $(this).find('.adult-name').val();
+                                var adultCCCD = $(this).find('.adult-cccd').val();
+                                var adultPhone = $(this).find('.adult-phone').val();
+                                var adultNote = $(this).find('.adult-note').val();
+
+                                adultMembers.push({
+                                    name: adultName,
+                                    cccd: adultCCCD,
+                                    phone: adultPhone,
+                                    note: adultNote
+                                });
+                            });
+
+                            var childMembers = [];
+                            $('.child-member').each(function() {
+                                var childName = $(this).find('.child-name').val();
+                                var childNote = $(this).find('.child-note').val();
+
+                                childMembers.push({
+                                    name: childName,
+                                    note: childNote
+                                });
+                            });
+
+                            var toddlerMembers = [];
+                            $('.toddler-member').each(function() {
+                                var toddlerName = $(this).find('.toddler-name').val();
+                                var toddlerNote = $(this).find('.toddler-note').val();
+
+                                toddlerMembers.push({
+                                    name: toddlerName,
+                                    note: toddlerNote
+                                });
+                            });
+                            var infantMembers = [];
+                            $('.infant-member').each(function() {
+                                var infantName = $(this).find('.infant-name').val();
+                                var infantNote = $(this).find('.infant-note').val();
+
+                                infantMembers.push({
+                                    name: infantName,
+                                    note: infantNote
+                                });
+                            });
                             var data = {
                                 tour_id: tour_id,
                                 name: name,
@@ -685,6 +736,10 @@
                                 departure_date: departure_date,
                                 payment_method: selectedPayment,
                                 sale:sale,
+                                adult_members: adultMembers,  // Thêm thông tin người lớn
+                                child_members: childMembers,    // Thêm thông tin trẻ em
+                                toddler_members: toddlerMembers, 
+                                infant_members: infantMembers, 
                                 _token: _token
                             };
                             if (selectedPayment === 'COD' || selectedPayment === 'BANK') {
@@ -697,7 +752,8 @@
                                     }
                                 });
                                 window.setTimeout(function() {
-                                    location.reload();
+                                    var customer_id = $('.customer_id').val(); 
+                                    window.location.href = "{{ url('thong-tin-tour-dat') }}/" + customer_id; 
                                 }, 3000);
                             } else if (selectedPayment === 'VNPAY') {
                                 $.ajax({
@@ -827,6 +883,7 @@
                 }
                 return;
             }
+            displayMemberInfo(numAdults, numChildren,numToddlers,numInfants);
             var totalPrice = (numAdults * adultPrice) + (numChildren * childPrice) + (numToddlers * toddlerPrice) + (
                 numInfants * infantPrice);
 
@@ -864,6 +921,8 @@
                 currency: 'VND'
             });
             updatePaymentOptions(finalPrice);
+           
+        
         }
         function updatePaymentOptions(totalPrice) {
             var maxAmountForMomo = 50000000; // 50 triệu đồng
@@ -885,7 +944,70 @@
 
         // Tính toán giá trị ban đầu khi trang được tải
         calculateTotal();
-        
+
+        function displayMemberInfo(numAdults, numChildren,numToddlers,numInfants) {
+            var adultMembersContainer = document.getElementById('adultMembers');
+            var childMembersContainer = document.getElementById('childMembers');
+            var toddlerMembersContainer = document.getElementById('toddlerMembers');
+            var infantMembersContainer = document.getElementById('infantMembers');
+            adultMembersContainer.innerHTML = '';
+            childMembersContainer.innerHTML = '';
+            toddlerMembersContainer.innerHTML='';
+            infantMembersContainer.innerHTML='';
+
+           // Hiển thị thông tin cho người lớn
+            for (var i = 1; i < numAdults; i++) {
+                adultMembersContainer.innerHTML += `
+                    <div class="member adult-member mt-3">
+                        <h5>Người lớn ${i+1}</h5>
+                        <input type="text" class="form-control adult-name mt-1" placeholder="Tên">
+                        <input type="text" class="form-control adult-cccd mt-1" placeholder="CCCD">
+                        <input type="text" class="form-control adult-phone mt-1" placeholder="Số điện thoại">
+                        <input type="text" class="form-control adult-note mt-1" placeholder="Ghi chú">
+                    </div>`;
+            }
+
+            // Hiển thị thông tin cho trẻ em
+            for (var j = 0; j < numChildren; j++) {
+                childMembersContainer.innerHTML += `
+                    <div class="member child-member mt-3">
+                        <h5>Trẻ em ${j+1}</h5>
+                        <input type="text" class="form-control child-name mt-1" placeholder="Tên">
+                        <input type="text" class="form-control child-note mt-1" placeholder="Ghi chú">
+                    </div>`;
+            }
+            for (var k = 0; k < numToddlers; k++) {
+                toddlerMembersContainer.innerHTML += `
+                    <div class="member toddler-member mt-3">
+                        <h5>Trẻ nhỏ ${k+1}</h5>
+                        <input type="text" class="form-control toddler-name mt-1" placeholder="Tên">
+                        <input type="text" class="form-control toddler-note mt-1" placeholder="Ghi chú">
+                    </div>`;
+            }
+
+            for (var h = 0; h < numInfants; h++) {
+                infantMembersContainer.innerHTML += `
+                    <div class="member infant-member mt-3">
+                        <h5>Sơ sinh ${h+1}</h5>
+                        <input type="text" class="form-control infant-name mt-1" placeholder="Tên">
+                        <input type="text" class="form-control infant-note mt-1" placeholder="Ghi chú">
+                    </div>`;
+            }
+
+
+
+            // Hiển thị container nếu có thành viên
+            if (numAdults > 1 || numChildren > 0 || numToddlers > 0 || numInfants > 0) {
+                document.getElementById('memberInfoContainer').style.display = 'block';
+                document.getElementById('memberInfoContainer').style.border = '2px dashed #000';
+                document.getElementById('memberInfoContainer').style.padding = '15px';
+                document.getElementById('memberInfoContainer').style.borderRadius = '5px';
+                document.getElementById('title_memberInfor').style.display = '';
+            } else {
+                document.getElementById('memberInfoContainer').style.display = 'none';
+            }
+        }
+                
     </script>
     {{-- Tính tiền  --}}
 
@@ -930,10 +1052,17 @@
     <script>
         $('.send-comment').click(function() {
             var customerId = $('#customer_id').val();
+            var da_di = $('.da_di').val();
             if (customerId == 0) {
                 alert('Bạn hãy đăng nhập để bình luận');
                 window.location.href = "{{ route('login_customer') }}";
-            } else {
+            
+            }
+            else if(da_di==0){
+                alert('Hãy đi tour này để được phép đánh giá!')
+
+            } 
+            else {
                 var comment_tour_id = $('.comment_tour_id').val();
                 var customer_id = $('.customer_id').val();
                 var comment_name = $('.comment_name').val();
@@ -969,7 +1098,7 @@
                         });
 
                         alert(
-                            'Gửi đánh giá thành công! Bình luận của bạn sẽ sớm được duyệt và phản hồi');
+                            'Gửi đánh giá thành công!');
                         window.setTimeout(function() {
                             location.reload();
                         }, 100);
@@ -1377,6 +1506,55 @@
         }
       
     </script>
+    
+    {{-- Đổi ngày sau khi đặt --}}
+    <script>
+        $(document).ready(function() {
+            // Khi nhấn vào icon đổi ngày
+            $('.btn-edit-date').click(function() {
+                var orderId = $(this).data('id'); // Lấy order_id từ thuộc tính data-id
+    
+                // Ẩn ngày hiện tại và hiển thị dropdown chọn ngày cho đơn hàng cụ thể
+         
+
+                $('.current-departure-date-' + orderId).hide(); // Ẩn ngày hiện tại cụ thể
+                $('.select-departure-date[data-id="' + orderId + '"]').show(); // Hiển thị dropdown cho đơn hàng cụ thể
+    
+                // Ẩn nút đổi ngày sau khi nhấn
+                $(this).hide();
+            });
+        
+            // Khi người dùng chọn ngày mới
+            $('.select-departure-date').change(function() {
+                var orderId = $(this).data('id'); // Lấy order_id từ thuộc tính data-id
+                var newDate = $(this).val();
+              
+              
+                $.ajax({
+                    url: '/update-departure-date/' + orderId,
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        departure_date: newDate
+                    },
+                    success: function(response) {
+                        // Cập nhật lại ngày khởi hành
+                        $('.current-departure-date-' + orderId).text(newDate).show();
+                        
+                        // Ẩn dropdown và hiển thị lại icon đổi ngày
+                        $('.select-departure-date[data-id="' + orderId + '"]').hide();
+                        $('.btn-edit-date[data-id="' + orderId + '"]').show();
+                        alert('Cập nhật ngày thành công!');
+                        location.reload();
+                    }
+                });
+            });
+          
+        });
+        
+    </script>
+    
+    
     
 
     <style>

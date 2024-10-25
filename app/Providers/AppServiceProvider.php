@@ -110,7 +110,13 @@ class AppServiceProvider extends ServiceProvider
                 if ($totalCountMonth == 0) {
                     $percentage = 0;
                 } else {
-                    $percentage = ($totalCountMonth   / ($totalCount - $totalCountMonth)) * 100;
+                    if($totalCount - $totalCountMonth==0 ){
+                        $percentage =100;
+                    }
+                    else{
+                        $percentage = ($totalCountMonth   / ($totalCount - $totalCountMonth)) * 100;
+                    }
+                    
                 }
             }
 

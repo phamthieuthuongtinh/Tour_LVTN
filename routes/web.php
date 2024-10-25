@@ -96,6 +96,8 @@ Route::post('dang-xuat', [CustomerController::class, 'logout'])->name('customers
 Route::get('thong-tin-khach-hang/{id}', [CustomerController::class, 'infor'])->name('customers.infor');
 Route::get('thong-tin-tour-dat/{id}', [CustomerController::class, 'ordered'])->name('customers.ordered');
 Route::get('tour-da-thich/{id}', [CustomerController::class, 'liked'])->name('customers.liked');
+Route::post('update-departure-date/{id}', [CustomerController::class, 'update_order_date'])->name('customers.update_order_date');
+Route::delete('huy-tour/{id}', [OrderController::class, 'destroy_has_paid'])->name('orders.destroy_has_paid');
 
 //Contact
 Route::resource('/contacts', ContactController::class);

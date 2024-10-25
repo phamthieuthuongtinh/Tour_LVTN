@@ -250,6 +250,29 @@
                                             <input type="hidden" class="form-control tour_id"
                                                 value="{{ $tour->id }}" id="tour_id">
                                             <div class="row g-3">
+                                                <div class="col-md-12">
+                                                    <div>
+                                                        <label style="color: #FF0000" for="departure_date">Chọn ngày khởi hành(*)</label>
+                                                        <div class="row">
+                                                            @foreach ($departures as $key => $depart)
+                                                                <div class="col-md-3"> <!-- Mỗi cột chiếm 1/3 màn hình trên kích thước vừa và lớn -->
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input departure_date" type="radio" name="departure_date" id="departure_{{ $depart->id }}"
+                                                                            value="{{ $depart->departure_date }}">
+                                                                        <label class="form-check-label" for="departure_{{ $depart->id }}">
+                                                                            {{ $depart->departure_date }}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                @if (($key + 1) % 4 == 0) <!-- Chia 3 cột, sau mỗi 3 item sẽ đóng hàng và mở hàng mới -->
+                                                                    </div><div class="row">
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
                                                         <input type="text" class="form-control name"
@@ -278,14 +301,12 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="text" class="form-control departure_date"
-                                                            value="{{ $nearestDeparture ? $nearestDeparture->departure_date : '' }}"
-                                                            name="departure_date" id="departure_date" placeholder=""
-                                                            readonly>
-                                                        <label for="departure_date">Ngày khởi hành (*Chỉ được đặt ngày khởi
-                                                            hành gần nhất)</label>
+                                                        <input type="text" class="form-control address" id="address"
+                                                            placeholder="Địa chỉ">
+                                                        <label for="address">Địa chỉ</label>
                                                     </div>
                                                 </div>
+                                                
                                                 @if($sale)
                                                     <input type="hidden" name="tour-sale" class="tour-sale" id="tour-sale" value="{{$sale->rate}}">
                                                     <div class="col-md-6">
@@ -335,7 +356,7 @@
                                                             <input type="number" class="form-control tre_em" id="tre_em"
                                                                 placeholder="0" value="0"
                                                                 data-price="{{ $tour->price_treem }}">
-                                                            <label for="tre_em">Số trẻ em(5-11 tuổi)</label>
+                                                            <label for="tre_em">Số trẻ em(5-14 tuổi)</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -357,17 +378,21 @@
                                                 @endif
                                                 <div class="col-12">
                                                     <div class="form-floating">
-                                                        <input type="text" class="form-control address" id="address"
-                                                            placeholder="Địa chỉ">
-                                                        <label for="address">Địa chỉ</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="form-floating">
                                                         <textarea class="form-control note" placeholder="Nội dung ghi chú" id="note" style="height: 60px"></textarea>
                                                         <label for="note">Ghi chú</label>
                                                     </div>
                                                 </div>
+                                                <div class="col-12" id="memberInfoContainer" style="display: none;">
+                                                    <div style="">
+                                                        <h4 id="title_memberInfor" style="color: #b84217; display:none;">Thông tin thành viên(*)</h4>
+                                                        <div id="adultMembers"></div>
+                                                        <div id="childMembers"></div>
+                                                        <div id="toddlerMembers"></div>
+                                                        <div id="infantMembers"></div>
+                                                    </div>
+                                                   
+                                                </div>
+                                               
                                                 <input type="hidden" class="customer_id"
                                                     value="{{ Session::get('customer_id') }}">
 
@@ -582,12 +607,27 @@
                                                 echo Session::get('customer_name');
                                             @endphp
                                         </label>
+                                        @php
+                                            $da_di=0;
+                                            foreach($orderedetails as $or){
+                                                if($or->tour_id==$tour->id){
+                                                    $da_di=1;
+                                                    break;
+                                                }
+
+                                            }
+        
+                                        @endphp
+
                                         <input type="hidden" name="customer_id" class="customer_id"
                                             value="{{ Session::get('customer_id') }}" id="customer_id">
+                                            
                                         <input type="hidden" name="comment_name" class="comment_name"
                                             value="{{ Session::get('customer_name') }}" id="comment_name">
                                         <input type="hidden" name="comment_tour_id" class="comment_tour_id"
                                             value="{{ $tour->id }}">
+                                        <input type="hidden" name="da_di" class="da_di"
+                                            value="{{ $da_di }}" id="da_di">
                                         <div class="mb-3">
                                             <small class="fa fa-star text-primary star" data-value="1"></small>
                                             <small class="fa fa-star text-primary star" data-value="2"></small>
