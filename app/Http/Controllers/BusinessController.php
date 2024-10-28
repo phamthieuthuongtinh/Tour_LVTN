@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Register;
+use App\Models\Member;
+use App\Models\Tour;
+use App\Models\Order;
+use App\Models\Orderdetail;
+use App\Models\Departure;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Session;
@@ -55,5 +60,16 @@ class BusinessController extends Controller
             toastr()->error('Đăng ký không thành công!',['positionClass' => 'toast-bottom-right']);
             return redirect()->back();
         }
+    }
+    public function ditour()
+    {
+        $member=Member::where('status',1)->orderby('id','DESC')->get();
+        foreach($member as $mem){
+            $departure=Departure::where('id',$mem->departure_id)->first();
+            $tour=Tour::where('id',$departure->tour_id)->first();
+            $mem->tour_name=$tour->title;
+            $mem->departure_date=$departure->departure_date;
+        }
+       return view('admin.customer_di_tour.index',compact('member'));
     }
 }

@@ -129,7 +129,7 @@
                         </ul>
                     </li>
                     {{-- {{ Request::segment(1) == 'tours' ? 'menu-is-opening menu-open' : '' }} --}}
-                    <li class="nav-item menu-tour"">
+                    <li class="nav-item menu-tour">
                         <a href="{{ route('tours.admin_index_tour') }}" class="nav-link">
                             <i class="fa-solid fa-plane-departure"></i>
                             <p>
@@ -210,6 +210,14 @@
                                 <a href="{{ route('orders.index') }}" class="nav-link all-order">
                                     <i class="fa-solid fa-ticket"></i>
                                     <p>Danh sách đơn</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview pl-4">
+                            <li class="nav-item">
+                                <a href="{{ route('orders.refund_index') }}" class="nav-link all-order-refund">
+                                    <i class="fa-solid fa-repeat"></i>
+                                    <p>Danh sách đơn hoàn tiền</p>
                                 </a>
                             </li>
                         </ul>
@@ -365,14 +373,14 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview pl-4">
+                        {{-- <ul class="nav nav-treeview pl-4">
                             <li class="nav-item">
                                 <a href="{{ route('comment.business_index') }}" class="nav-link all-cmt">
                                     <i class="fa-solid fa-check"></i>
                                     <p>Duyệt đánh giá</p>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> --}}
                         <ul class="nav nav-treeview pl-4">
                             <li class="nav-item">
                                 <a href="{{ route('comment.business_create') }}" class="nav-link create-cmt">
@@ -424,31 +432,24 @@
                             </li>
                         </ul>
                     </li>
-                    {{-- <li class="nav-item {{Request::segment(1)=='vouchers' ? 'menu-is-opening menu-open' : ''}}">
-            <a href="{{route('vouchers.index')}}" class="nav-link">
-               <i class="fa-solid fa-money-bill"></i>
-               <p>
-                  Voucher
-                  <i class="right fas fa-angle-left"></i>
-               </p>
-            </a>
-            <ul class="nav nav-treeview pl-4">
-               <li class="nav-item">
-                  <a href="{{route('vouchers.create')}}" class="nav-link">
-                     <i class="fa-solid fa-plus"></i>
-                     <p>Thêm voucher</p>
-                  </a>
-               </li>
-            </ul>
-            <ul class="nav nav-treeview pl-4">
-               <li class="nav-item">
-                  <a href="{{route('vouchers.index')}}" class="nav-link">
-                     <i class="fa-regular fa-rectangle-list"></i>
-                     <p>Danh sách voucher</p>
-                  </a>
-               </li>
-            </ul>
-         </li> --}}
+                    <li class="nav-item menu-customer-tour">
+                        <a href="{{route('businesses.ditour')}}" class="nav-link">
+                        <i class="fa-solid fa-users"></i>
+                        <p>
+                            Khách hàng
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                        </a>
+                      
+                        <ul class="nav nav-treeview pl-4">
+                        <li class="nav-item">
+                            <a href="{{route('businesses.ditour')}}" class="nav-link all-customer-tour">
+                                <i class="fa-regular fa-rectangle-list"></i>
+                                <p>Danh sách khách hàng</p>
+                            </a>
+                        </li>
+                        </ul>
+                    </li>
                     }
                 @endif
                 <br>

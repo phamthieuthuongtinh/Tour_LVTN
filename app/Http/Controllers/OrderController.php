@@ -23,11 +23,31 @@ class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * 1 đang xử lý
+    *2 đã thanh toán
+    *3 đang hoàn tiền
+    *4 đã hoàn tiền
+    *5 đã đi
      */
     public function index()
     {
         $orders=Order::with('customer')->where('order_status','>',0)->where('order_status','<',3)->Orderby('order_status','ASC')->get();   
         return view('admin.orders.index',compact('orders'));
+    }
+    public function refund_index()
+    {
+        $orders=Order::with('customer')->where('order_status','>',2)->Orderby('order_status','ASC')->get();   
+        return view('admin.orders.refund',compact('orders'));
+    }
+    public function refund(string $id)
+    {
+        $order=Order::find($id);
+
+        $order->order_status=4;
+        $order->save();
+        
+        toastr()->success('Hoàn tiền đơn thành công!');
+        return redirect()->route('orders.refund_index');
     }
     public function business_index()
     {

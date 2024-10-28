@@ -63,6 +63,8 @@
                                         Chưa thanh toán
                                     @elseif ($ord->order_status == 3)
                                         Chờ hoàn tiền
+                                    @elseif ($ord->order_status == 4)
+                                        Đã hoàn tiền
                                     @else
                                         Đã thanh toán
                                     @endif
@@ -72,7 +74,7 @@
 
                                 <td>
                                     <div class="btn-group">
-                                        @if ($ord->order_status == 1)
+                                        @if ($ord->order_status == 3)
                                             <a href="{{ route('orders.show', [$ord->order_id]) }}" class="btn btn-warning"
                                                 title="Cập nhật">
                                                 <i class="fas fa-edit"></i>

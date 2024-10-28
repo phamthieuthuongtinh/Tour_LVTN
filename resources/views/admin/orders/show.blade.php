@@ -237,6 +237,13 @@
                                                 value="{{ $orderdetails->orderdetails_id }}">
                                         </div>
                                     </form>
+                                @elseif($order->order_status==3)
+                                <form action="{{ route('orders.refund', $order->order_id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Bạn có chắc chắn muốn hoàn tiền cho đơn hàng này?')">
+                                        Hoàn tiền
+                                    </button>
+                                </form>
                                 @endif
 
                             </td>

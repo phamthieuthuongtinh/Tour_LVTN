@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 1: đã duyệt
+     *  * 2: đã xóa
+     *  * 0: đã chưa duyệt
      */
     public function index()
     {
         $comments = Comment::with('tour')->where(function($query) {
-            $query->where('status', 0)
-                  ->orWhere('status', 2);
+            $query->where('status', 0)->orwhere('status',2);
         })
         ->whereNull('comment_parent_comment')
         ->orderBy('status', 'ASC')
@@ -61,14 +62,14 @@ class CommentController extends Controller
     }
 
     public function business_create(){
-        $comments= Comment::where('status',1)->whereNull('comment_parent_comment')->orderby('comment_id','DESC')->get();
+        $comments= Comment::where('status','!=',2)->whereNull('comment_parent_comment')->orderby('comment_id','DESC')->get();
         $comment_reply = Comment::with('tour')->orderby('status', 'DESC')->get();
 
         $comments_business = collect();
         if(Auth::user()->id!=1){
             $tours=Tour::with('category')->with('user')->where('business_id',Auth::user()->id)->Orderby('status','DESC')->get();
             $tourIds = $tours->pluck('id')->toArray();
-            $comments_business = Comment::with('tour')->where('status',1)->whereNull('comment_parent_comment')->whereIn('comment_tour_id', $tourIds)->orderBy('comment_id', 'ASC')->get();
+            $comments_business = Comment::with('tour')->where('status','!=',2)->whereNull('comment_parent_comment')->whereIn('comment_tour_id', $tourIds)->orderBy('comment_id', 'ASC')->get();
             $commnent_reply_business = Comment::with('tour')->whereIn('comment_tour_id', $tourIds)->orderby('status', 'DESC')->get();
          }
         return view('admin.comments.business_create',compact('comments_business','commnent_reply_business'));
@@ -123,10 +124,10 @@ class CommentController extends Controller
     {
         $comment = Comment::where('comment_id', $id)->first();
         if($comment->status==0){
-            $comment->status=1;
-            toastr()->success('Duyệt thành công!');
+            $comment->status=2;
+            toastr()->success('Duyệt xóa thành công!');
         }else{
-            $comment->status=0;
+            $comment->status=1;
             toastr()->success('Bỏ duyệt thành công!');
         }
         
@@ -141,21 +142,28 @@ class CommentController extends Controller
     public function destroy(string $id)
     {
         $comment = Comment::where('comment_id', $id)->first();
-        if($comment->status==2){
-            $comment->status=0;
-            toastr()->success('Khôi phục thành công!');
-            $comment->save();
-           
-        }elseif($comment->comment_parent_comment!=null){
+        if($comment->comment_parent_comment!=null){
             $comment->delete();
             toastr()->success('Xoá thành công!');
            
         }else{
-            $comment->status=2;
+            $comment->status=1;
             toastr()->success('Xóa thành công!');
             $comment->save();
            
         }
+        return redirect()->back();
+       
+    }
+    public function recycle(string $id)
+    {
+        $comment = Comment::where('comment_id', $id)->first();
+       
+            $comment->status=0;
+            toastr()->success('Khôi phục thành công!');
+            $comment->save();
+           
+      
         return redirect()->back();
        
     }
@@ -170,5 +178,24 @@ class CommentController extends Controller
         $comment->comment_name = Auth::user()->name;
         $comment->customer_id = Auth::user()->id;
         $comment->save();
+    }
+    public function request_destroy(Request $request)
+    {
+        $data = $request->all();
+        $comment = Comment::where('comment_id',$data['comment_id'])->where('comment_tour_id',$data['comment_tour_id'])->first();
+        $comment->status = 0;
+        $comment->reason=$data['reason'];
+        $comment->save();
+    }
+    public function huyyeucau(string $id)
+    {
+        $comment = Comment::where('comment_id', $id)->first();
+      
+            $comment->status=1;
+            toastr()->success('Hủy yêu cầu thành công!');
+            $comment->save();
+
+        return redirect()->back();
+       
     }
 }

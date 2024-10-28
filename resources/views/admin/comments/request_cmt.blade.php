@@ -2,7 +2,7 @@
 @section('content')
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Tất Cả Comment Yêu cầu</h3>
+            <h3 class="card-title">Tất Cả Comment Chưa Duyệt</h3>
         </div>
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -35,7 +35,6 @@
                             <th>Người đánh giá</th>
 
                             <th>Nội dung</th>
-                            <th>Lý do</th>
                             <th>Ngày đánh giá</th>
                             <th>Thao tác</th>
                         </tr>
@@ -53,13 +52,12 @@
                                 <td>{{ $com->comment_name }}</td>
 
                                 <td>{{ $com->comment_content }}</td>
-                                <td>{{ $com->reason }}</td>
                                 <td>{{ $com->created_at }}</td>
                                 <td>
                                     <div class="btn-group">
                                         @if ($com->status == 0)
                                             <!-- Duyệt -->
-                                            <form method="POST" onsubmit="return confirm('Bạn có chắc muốn duyệt xóa đánh giá này?');"
+                                            <form method="POST" onsubmit="return confirm('Bạn có chắc muốn duyệt?');"
                                                 action="{{ route('comment.update', [$com->comment_id]) }}" class="d-inline">
                                                 @method('PATCH')
                                                 @csrf
@@ -69,19 +67,40 @@
                                             </form>
                                             <br>
                                             <!-- Xóa -->
-                                            <form method="POST" onsubmit="return confirm('Bạn có chắc muốn từ chối?');"
+                                            <form method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa?');"
                                                 action="{{ route('comment.destroy', [$com->comment_id]) }}"
                                                 class="d-inline">
                                                 @method('DELETE')
                                                 @csrf
-                                                <button type="submit" class="btn btn-danger" title="Từ chối">
-                                                    <i class="fas fa-times"></i>
+                                                <button type="submit" class="btn btn-danger" title="Xóa">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @elseif($com->status == 1)
+                                            <!-- Bỏ duyệt -->
+                                            <form method="POST" onsubmit="return confirm('Bạn có chắc muốn bỏ duyệt?');"
+                                                action="{{ route('comment.update', [$com->comment_id]) }}" class="d-inline">
+                                                @method('PATCH')
+                                                @csrf
+                                                <button type="submit" class="btn btn-warning" title="Bỏ duyệt">
+                                                    <i class="fa fa-undo"></i>
+                                                </button>
+                                            </form>
+                                            <br>
+                                            <!-- Xóa -->
+                                            <form method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa?');"
+                                                action="{{ route('comment.destroy', [$com->comment_id]) }}"
+                                                class="d-inline">
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger" title="Xóa">
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
                                         @else
                                             <!-- Khôi phục -->
                                             <form method="POST" onsubmit="return confirm('Bạn có chắc muốn khôi phục?');"
-                                                action="{{ route('comment.recycle', [$com->comment_id]) }}"
+                                                action="{{ route('comment.destroy', [$com->comment_id]) }}"
                                                 class="d-inline">
                                                 @method('PATCH')
                                                 @csrf

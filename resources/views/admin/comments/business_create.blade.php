@@ -78,14 +78,33 @@
                                 </td>
 
                                 <td style="width: 200px;">{{ $com->created_at }}</td>
+                                @if($com->status==1)
                                 <td>
                                     <textarea class="reply_comment_{{ $com->comment_id }}" placeholder="Nội dung phản hồi" rows="3" cols="30"></textarea>
-                                    <button class="btn btn-info btn-sm btn-reply-comment"
+                                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                                        <button class="btn btn-info btn-sm btn-reply-comment"
                                         data-comment_id="{{ $com->comment_id }}"
                                         data-tour_id="{{ $com->comment_tour_id }}"
                                         style="text-align:left;display: block; width: fit-content; margin-top: 5px;">Phản
                                         hồi</button>
+                                        <button class="btn btn-danger btn-sm btn-request-destroy-comment"
+                                        data-comment_id="{{ $com->comment_id }}"
+                                        data-tour_id="{{ $com->comment_tour_id }}"
+                                        style="text-align:left;display: block; width: fit-content; margin-top: 5px;">Yêu cầu xóa</button>
+                                    </div>
+                                    
                                 </td>
+                                @else
+                                <td>
+                                    <form method="POST" action="{{ route('comment.huyyeucau', [$com->comment_id]) }}">
+                                        @method('PATCH')
+                                        @csrf
+                                        <button type="submit" class="btn btn-warning" title="Hủy gửi">
+                                            <i class="fas fa-undo"></i> <!-- Biểu tượng "Undo" -->
+                                        </button>
+                                    </form>
+                                </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -93,6 +112,27 @@
             </div>
         </div>
     </div>
+    <!-- Modal nhập lý do -->
+        <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reasonModalLabel">Nhập lý do yêu cầu xóa</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control" id="deleteReason" placeholder="Nhập lý do..." rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger" id="submitDeleteRequest">Gửi yêu cầu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <style>
         .btn-group {
             display: flex;

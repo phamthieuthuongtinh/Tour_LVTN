@@ -105,6 +105,7 @@ Route::resource('/contacts', ContactController::class);
 // bussiness
 Route::get('dang-ky-doanh-nghiep', [BusinessController::class, 'register_business'])->name('businesses.register_business');
 Route::post('dang-ky', [BusinessController::class, 'store_register'])->name('businesses.store_register_business');
+Route::get('customer-tour', [BusinessController::class, 'ditour'])->name('businesses.ditour');
 
 
 //Banner
@@ -116,11 +117,15 @@ Route::resource('/orders', OrderController::class);
 Route::get('/orders/business/order', [OrderController::class, 'business_index'])->name('orders.business_index');
 Route::post('/confirm-order', [OrderController::class, 'confirm_order'])->name('orders.confirm');
 Route::post('/orders/update_quantity', [OrderController::class, 'update_quantity'])->name('orders.update_quantity'); //cạp nhật số lượng người và trạng thái tt
-
+Route::get('/orders-refund/refund', [OrderController::class, 'refund_index'])->name('orders.refund_index');
+Route::post('/orders/refund/{id}', [OrderController::class, 'refund'])->name('orders.refund');
 
 //Comment
 Route::resource('/comment', CommentController::class);
 Route::post('/reply', [CommentController::class, 'reply'])->name('comment.reply');
+Route::post('/request', [CommentController::class, 'request_destroy'])->name('comment.request_destroy');
+Route::PATCH('/huyyeucau/{id}', [CommentController::class, 'huyyeucau'])->name('comment.huyyeucau');
+Route::PATCH('/recycle/{id}', [CommentController::class, 'recycle'])->name('comment.recycle');
 Route::get('/comment/bussiness/index', [CommentController::class, 'business_index'])->name('comment.business_index');
 Route::get('/comment/bussiness/reply', [CommentController::class, 'business_create'])->name('comment.business_create');
 

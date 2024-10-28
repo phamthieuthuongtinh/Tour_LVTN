@@ -362,6 +362,7 @@
   // Gọi hàm calculateDays khi trang được tải
   window.onload = calculateDays;
 </script>
+{{-- Phàn hổi cmt --}}
 <script>
  
   $('.btn-reply-comment').click(function() {
@@ -394,7 +395,51 @@
 
     })
 </script>
+{{-- Yêu cầu cmt --}}
+<script>
+ 
+  $('.btn-request-destroy-comment').click(function() {
 
+    
+      var comment_id = $(this).data('comment_id');
+
+      var comment_tour_id = $(this).data('tour_id');
+
+      // Hiển thị modal nhập lý do
+      $('#reasonModal').modal('show');
+
+      // Xử lý khi nhấn nút "Gửi yêu cầu" trong modal
+      $('#submitDeleteRequest').off('click').on('click', function() {
+          // Lấy lý do từ ô nhập
+          var reason = $('#deleteReason').val();
+
+          // Kiểm tra nếu lý do trống
+          if(reason.trim() === "") {
+              alert('Vui lòng nhập lý do!');
+              return;
+          }
+
+      $.ajax({
+        url: "{{route('comment.request_destroy')}}",
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+          comment_id: comment_id,
+          reason: reason,
+          comment_tour_id: comment_tour_id
+        },
+        success: function(data) {
+          $('.reply_comment_' + comment_id).val('');
+          
+          alert('Đã gửi yêu cầu thành công!');
+          window.location.reload();
+        }
+      });
+    });
+    })
+</script>
 
 {{-- Chuyển đổi trạng thái đã thanh toán <> chưa thanh toán và cập nhật số lượng người còn của tour --}}
 <script type="text/javascript">
@@ -893,6 +938,9 @@
             else if (currentUrl.match(/\/orders\/\d+$/)) {
                 $('.all-order').addClass('active');
             }
+            else if (currentUrl.match(/\/orders-refund\/refund\/?$/)) {
+                $('.all-order-refund').addClass('active');
+            }
         }
         if (currentUrl.includes('/vouchers')) {
             // Mở menu 'categories'
@@ -964,6 +1012,24 @@
             // Trang chỉnh sửa (/categories/{id}/edit)
             else if (currentUrl.match(/\/discounts\/\d+\/edit$/)) {
                 $('.edit-discount').addClass('active');
+            }
+        }
+        if (currentUrl.includes('/customer-tour')) {
+            // Mở menu 'categories'
+            $('.menu-customer-tour').addClass('menu-is-opening menu-open');
+
+            // Phân biệt các trang cụ thể:
+            // Trang tạo mới (/categories/create)
+            if (currentUrl.match(/\/customer-tour\/create$/)) {
+                $('.create-customer-tour').addClass('active');
+            }
+            // Trang danh sách (/categories) và không có thêm phần đuôi như /create hay /edit
+            else if (currentUrl.match(/\/customer-tour\/?$/)) {
+                $('.all-customer-tour').addClass('active');
+            }
+            // Trang chỉnh sửa (/categories/{id}/edit)
+            else if (currentUrl.match(/\/customer-tour\/\d+\/edit$/)) {
+                $('.edit-customer-tour').addClass('active');
             }
         }
   });
