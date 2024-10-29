@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon -->
     <link href="{{ asset('frontend/img/logo.png') }}" rel="icon">
 
@@ -1553,7 +1553,78 @@
         });
         
     </script>
+    {{-- Theo doi hanh vi khach hang --}}
+    <script>
+        $(document).ready(function(){
+            if (window.location.href === 'http://127.0.0.1:8000/') {
+              
+              sendViewedTours(); 
+            }
+            var tourId = null; // Khởi tạo tourId với giá trị mặc định
+            @if(isset($tour) && $tour->id)
+                tourId = {{ $tour->id }}; 
+            @endif
+
+            // Kiểm tra nếu tourId đã được gán giá trị
+            if (tourId!=null) {
+                var tour_seen_cate = document.getElementById('tour_seen_cate' + tourId);
+                var tour_seen_type = document.getElementById('tour_seen_type' + tourId);
+                if (tour_seen_cate && tour_seen_type) {
+                    saveTourView(tourId, tour_seen_cate.value, tour_seen_type.value);
+                } 
+            }
+            function saveTourView(tourId, categoryId,typeId) {
+                // Lấy danh sách tour đã xem từ localStorage
+                let viewedTours = JSON.parse(localStorage.getItem('viewedTours')) || [];
+                const tourData = { tourId, categoryId, typeId };
+                // Kiểm tra xem tour đã xem chưa
+                const isViewed = viewedTours.some(tour => tour.tourId === tourId);
+                let hasChanged = false;
+                if (!isViewed) {
+                    viewedTours.push(tourData);
+                    hasChanged = true;
+                }
+                localStorage.setItem('viewedTours', JSON.stringify(viewedTours));
+                if (hasChanged) {
+                    sendViewedTours(viewedTours);
+                }
+            
+            }
+        
+
+            function sendViewedTours() {
+                 // Lấy dữ liệu từ localStorage và chuyển sang JSON
+                let viewedTours = JSON.parse(localStorage.getItem('viewedTours')) || [];
+                
+                // Chuyển mảng thành chuỗi JSON để gửi qua URL
+                const viewedToursString = JSON.stringify(viewedTours);
+                // console.log("Dữ liệu:", viewedToursString);
+                $.ajax({
+                    url: "{{ route('history') }}",
+                    method: "POST", 
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        viewedTours: viewedToursString
+                    },
+                    
+                    success: function(response) {
+                        console.log("Dữ liệu phản hồi:", response);
+                      
+                    },
+                    error: function(error) {
+                        console.error("Lỗi:", error);
+                    }
+                });
+            }
+           
+            // if (window.location.href === 'http://127.0.0.1:8000/') {
+              
+            //     sendViewedTours(); 
+            // }
+
+        });
     
+    </script>
     
     
 

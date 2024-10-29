@@ -83,6 +83,12 @@
                                         <p class="mb-0"><i class="fa fa-building text-primary me-2"></i>Thuộc công ty:
                                             {{ $tour->user->name }}</p>
                                     </div>
+                                    <input type="hidden" id="tour_seen_id{{ $tour->id }}"
+                                    value="{{$tour->id}}">
+                                    <input type="hidden" id="tour_seen_cate{{ $tour->id }}"
+                                    value="{{ $tour->category->id}} ">
+                                    <input type="hidden" id="tour_seen_type{{ $tour->id }}"
+                                    value="{{$tour->type->id}}">
                                     <div class="text-center">
                                         <h6 class="section-title text-center text-primary text-uppercase">các ngày khởi hành
                                         </h6>
@@ -194,7 +200,7 @@
                                                         (Giảm {{$sale->rate}}%)
                                                     </td>
                                                    
-                                                    
+                                                  
                                                   
                                                     <td><del class="text-muted">{{ number_format($tour->price) }} đ</del>
                                                         <br>
@@ -628,6 +634,7 @@
                                             value="{{ $tour->id }}">
                                         <input type="hidden" name="da_di" class="da_di"
                                             value="{{ $da_di }}" id="da_di">
+                                        
                                         <div class="mb-3">
                                             <small class="fa fa-star text-primary star" data-value="1"></small>
                                             <small class="fa fa-star text-primary star" data-value="2"></small>
@@ -826,6 +833,7 @@
                                                                 value="{{$re->so_dem}}Đ">
                                                             <input type="hidden" id="wishlist_vehicle{{ $re->id }}"
                                                                 value="{{$re->vehicle }}">
+                                                            
                                                              @if ($re->avg_rating>0)
                                                                 <input type="hidden" id="wishlist_rate{{ $re->id }}"
                                                                         value="{{ $re->avg_rating }}">

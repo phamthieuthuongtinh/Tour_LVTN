@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', [IndexController::class, 'index'])->name('homeweb');
+Route::post('/history', [IndexController::class, 'history'])->name('history');
 Route::get('/about', [IndexController::class, 'about_us'])->name('about_us');
 Route::get('/contact', [IndexController::class, 'contact'])->name('contact');
 Route::get('/secure', [IndexController::class, 'secure'])->name('secure');

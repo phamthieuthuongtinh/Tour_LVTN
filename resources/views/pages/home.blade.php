@@ -2,7 +2,7 @@
 @section('content')
     <!--Recommend-->
     <div class="container-xxl py-3 ">
-        @if (Session::get('customer_id'))
+        @if (Session::get('customer_id') || Session::get('viewedTours')!=[])
             <div class="row">
                 <div class="col-md-12 col-xs-12 bx-title-lst-tour text-center">
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">

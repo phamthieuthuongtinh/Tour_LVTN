@@ -294,7 +294,7 @@ class ToursController extends Controller
     }
     public function detail_tour($slug){
         
-        $tour = Tour::where('slug', $slug)->first();
+        $tour = Tour::where('slug', $slug)->with('category')->with('type')->first();
         $sale=Discount::where('tour_id',$tour->id)->first();
         // dd($tour);
         //thông tin dịch vụ, comment, reply, đánh giá, danh sách ngày khởi hành, ngày khởi hành gần nhất của tour

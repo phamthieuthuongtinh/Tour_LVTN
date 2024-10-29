@@ -26,7 +26,36 @@ use function PHPUnit\Framework\isEmpty;
 
 class IndexController extends Controller
 {
+    public function history(Request $request){
+         // Lấy danh sách đề xuất từ lịch sử xem
+         $viewedTours = json_decode($request->input('viewedTours'), true) ?? [];
+         if (is_array($viewedTours)) {
+            session(['viewedTours' => $viewedTours]);
+             return response()->json(['success' => true, 'data' => $viewedTours]);
+         } else {
+             return response()->json(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);
+         }
+    }
     public function index(){
+        //Tour đã xem
+        $recommends= collect();
+        
+        $viewedTours = session('viewedTours', []);
+        // dd( $viewedTours);
+        if( !empty($viewedTours)){
+            foreach ($viewedTours as $view) {
+                $typeIdArray = is_array($view['typeId']) ? $view['typeId'] : [$view['typeId']];
+                $categoryIdArray = is_array($view['categoryId']) ? $view['categoryId'] : [$view['categoryId']];
+        
+                $recommends_by_type = Tour::whereIn('type_id', $typeIdArray)->where('status', 3)->get();
+                $recommends_by_cate = Tour::whereIn('category_id', $categoryIdArray)->where('status', 3)->get();
+        
+                $recommends = $recommends->merge($recommends_by_type)->merge($recommends_by_cate)->unique('id');
+            }
+        }
+
+
+
         //Tour noi bat
         $tour_hot=Tour::where('status',3)->orderBy('id','DESC')->get()->take(4);
         $tour_hot_id_sale=$tour_hot->pluck('id')->toArray();
@@ -64,8 +93,26 @@ class IndexController extends Controller
             
             return $type;
         });
+        // $recommends= collect();
+   
+        // $viewedTours = session('viewedTours', []);
+        // // dd( $viewedTours);
+        // if( !empty($viewedTours)){
+        //     foreach ($viewedTours as $view) {
+        //         $typeIdArray = is_array($view['typeId']) ? $view['typeId'] : [$view['typeId']];
+        //         $categoryIdArray = is_array($view['categoryId']) ? $view['categoryId'] : [$view['categoryId']];
+        
+        //         $recommends_by_type = Tour::whereIn('type_id', $typeIdArray)->where('status', 3)->get();
+        //         $recommends_by_cate = Tour::whereIn('category_id', $categoryIdArray)->where('status', 3)->get();
+        
+        //         $recommends = $recommends->merge($recommends_by_type)->merge($recommends_by_cate)->unique('id');
+        //     }
+        // }
+        // dd($recommends);
+        
+
         if(Session::get('customer_id')){
-            $recommends= collect();
+            
             $customer_id=Session::get('customer_id');
             $customer= Customer::where( 'customer_id',$customer_id)->first();
 
@@ -87,7 +134,7 @@ class IndexController extends Controller
             // dd($customer_id);
             $recommends_2=Tour::whereIn('type_id',$type_id)->whereNotIn('id',$tourId_list)->get();
         
-            $recommends = $recommends_1->merge($recommends_2)->unique('id');
+            $recommends = $recommends->merge($recommends_1)->merge($recommends_2)->unique('id');
            
            
                 $recommend = Recommend::where('customer_id', $customer_id)->first();
@@ -105,7 +152,7 @@ class IndexController extends Controller
                
                
                 $recommends = $recommends->shuffle();
-                $recommends = $recommends->take(20);
+                $recommends = $recommends->take(30);
                 //sale tour
                 $tour_id_sale=$recommends->pluck('id')->toArray();
                 $tour_sales=Discount::whereIn('tour_id',$tour_id_sale)->get();
@@ -129,7 +176,30 @@ class IndexController extends Controller
             return view('pages.home',compact('recommends','likes','tour_sales','types','tour_hot','tour_hot_sales'));
         }  
         else{
-            return view('pages.home',compact('types','tour_hot','tour_hot_sales'));
+            // $likes=Like::where('customer_id',$customer_id)->get();
+            $recommends = $recommends->shuffle();
+            $recommends = $recommends->take(30);
+            //sale tour
+            $tour_id_sale=$recommends->pluck('id')->toArray();
+            $tour_sales=Discount::whereIn('tour_id',$tour_id_sale)->get();
+           
+            //rating
+           
+            $rating=Rating::whereIn('tour_id',$tour_id_sale)->get();
+            $groupedRatings = $rating->groupBy('tour_id');
+            $avg_rating = $groupedRatings->map(function ($group) {
+                return $group->avg('rating');
+            });
+            
+
+            foreach ($recommends as $tour) {
+                // Nếu tour_id có trong danh sách tính trung bình đánh giá, gán avg_rating cho tour
+                $tourId = $tour->id; // Hoặc $tour->tour_id nếu cần
+                // Nếu tour_id có trong danh sách tính trung bình đánh giá, gán avg_rating cho tour
+                $tour->avg_rating = isset($avg_rating[$tourId]) ? $avg_rating[$tourId] : 0;
+            
+            }
+            return view('pages.home',compact('types','tour_hot','tour_hot_sales','tour_sales','recommends'));
         }      
     }
     // Xử lý ngôn ngữ tự nhiên NLP
