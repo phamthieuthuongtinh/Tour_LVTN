@@ -22,6 +22,7 @@ use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\MethodPaymentController;
 use App\Http\Controllers\TypetourController;
 use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\StaffController;
 use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -74,7 +75,7 @@ Route::patch('/tours/duyet/{id}', [ToursController::class, 'duyet'])->name('tour
 Route::patch('/tours/tuchoi-duyet/{id}', [ToursController::class, 'tuchoi_duyet'])->name('tours.tuchoi_duyet');
 Route::post('/tour/like', [ToursController::class, 'tour_like'])->name('tour.like');
 
-//Departure
+//Departudre
 Route::resource('/tours/departures', DepartureController::class);
 //Itinerary
 Route::resource('/tours/itineraries', ItineraryController::class);
@@ -164,3 +165,9 @@ Route::get('chi-tiet-blog/{id}', [BlogController::class, 'detail_blog'])->name('
 //Discount
 Route::resource('/discounts', DiscountController::class);
 Route::get('/tour-giam-gia/{slug}', [DiscountController::class, 'tour_sale'])->name('discounts.tour_sale');
+
+//Staff
+Route::resource('/staffs', StaffController::class);
+Route::get('/staffs/manage/{id}', [StaffController::class, 'manage_task'])->name('staffs.manage_task');
+Route::post('/staffs', [StaffController::class, 'add_task'])->name('staffs.add_task');
+Route::delete('/staffs/destroy-task/{id}', [StaffController::class, 'destroy_task'])->name('staffs.destroy_task');

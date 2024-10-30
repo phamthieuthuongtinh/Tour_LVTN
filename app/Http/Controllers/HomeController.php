@@ -90,9 +90,9 @@ class HomeController extends Controller
             $statistical_prev=Statisticalbusinesses::where('business_id',Auth::user()->id)->whereMonth('order_date', $previousMonthDate)->whereYear('order_date', $currentYear)->sum('profit');
             $statistical_now=Statisticalbusinesses::where('business_id',Auth::user()->id)->whereMonth('order_date', $currentMonth)->whereYear('order_date', $currentYear)->sum('profit');
             if($statistical_prev >$statistical_now){
-                $rate_statistical=($statistical_prev/($statistical_now+1111))*100;
+                $rate_statistical=($statistical_prev-($statistical_now));
             }else{
-                $rate_statistical=($statistical_now/($statistical_prev+1111))*100;
+                $rate_statistical=($statistical_now-($statistical_prev));
             }
             $rate_statistical = round($rate_statistical, 1);
         }

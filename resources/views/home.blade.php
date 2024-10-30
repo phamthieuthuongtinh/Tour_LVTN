@@ -96,7 +96,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>{{$rate_statistical}}<sup style="font-size: 20px">%</sup></h3>
+                <h3>{{number_format($rate_statistical)}}<sup style="font-size: 20px">đ</sup></h3>
 
                 <p>Lợi nhuận 
                   @if ($statistical_prev>$statistical_now)
@@ -118,12 +118,12 @@
               <div class="inner">
                 <h3>{{$comment_new}}</h3>
 
-                <p>Đánh giá mới</p>
+                <p>Đánh giá mới trong tháng</p>
               </div>
               <div class="icon">
                 <i class="ion ion-chatbubble"></i>
               </div>
-              <a href="{{route('comment.business_index')}}" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{route('comment.business_create')}}" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->

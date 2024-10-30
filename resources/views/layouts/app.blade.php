@@ -262,11 +262,12 @@
 
 {{-- FroalEditor --}}
 <script>
-  new FroalaEditor('#editor');
-  new FroalaEditor('#editor1');
-  new FroalaEditor('#editor2');
-  new FroalaEditor('#editor3');
+  new FroalaEditor('#editor', { quickInsertEnabled: false });
+  new FroalaEditor('#editor1', { quickInsertEnabled: false });
+  new FroalaEditor('#editor2', { quickInsertEnabled: false });
+  new FroalaEditor('#editor3', { quickInsertEnabled: false });
 </script>
+
 
 
 
@@ -1030,6 +1031,30 @@
             // Trang chỉnh sửa (/categories/{id}/edit)
             else if (currentUrl.match(/\/customer-tour\/\d+\/edit$/)) {
                 $('.edit-customer-tour').addClass('active');
+            }
+        }
+        if (currentUrl.includes('/staffs')) {
+            // Mở menu 'categories'
+            $('.menu-staff').addClass('menu-is-opening menu-open');
+
+            // Phân biệt các trang cụ thể:
+            // Trang tạo mới (/categories/create)
+            if (currentUrl.match(/\/staffs\/create$/)) {
+                $('.create-staff').addClass('active');
+            }
+            // Trang danh sách (/categories) và không có thêm phần đuôi như /create hay /edit
+            else if (currentUrl.match(/\/staffs\/?$/)) {
+                $('.all-staff').addClass('active');
+            }
+            // Trang chỉnh sửa (/categories/{id}/edit)
+            else if (currentUrl.match(/\/staffs\/\d+\/edit$/)) {
+                $('.all-staff').addClass('active');
+            }
+            else if (currentUrl.match(/\/staffs\/\d+?$/)) {
+                $('.all-staff').addClass('active');
+            }
+            else if (currentUrl.match(/\/staffs\/manage\/\d+?$/)) {
+                $('.all-staff').addClass('active');
             }
         }
   });

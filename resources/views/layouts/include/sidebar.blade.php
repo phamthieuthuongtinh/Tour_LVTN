@@ -288,14 +288,14 @@
                                 </a>
                             </li>
                         </ul>
-                        <ul class="nav nav-treeview pl-4">
+                        {{-- <ul class="nav nav-treeview pl-4">
                             <li class="nav-item">
                                 <a href="{{ route('contacts.create') }}" class="nav-link send-cont">
                                     <i class="fa-solid fa-paper-plane"></i>
                                     <p>Gửi mail hàng loạt</p>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> --}}
                     </li>
                     {{-- Sidebar của doanh nghiệp --}}
                 @else{
@@ -436,7 +436,7 @@
                         <a href="{{route('businesses.ditour')}}" class="nav-link">
                         <i class="fa-solid fa-users"></i>
                         <p>
-                            Khách hàng
+                            Khách hàng đi tour
                             <i class="right fas fa-angle-left"></i>
                         </p>
                         </a>
@@ -448,6 +448,32 @@
                                 <p>Danh sách khách hàng</p>
                             </a>
                         </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item menu-staff">
+                        <a href="{{route('staffs.index')}}" class="nav-link">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <p>
+                            Nhân viên
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                        </a>
+                      
+                        <ul class="nav nav-treeview pl-4">
+                            <li class="nav-item">
+                                <a href="{{route('staffs.index')}}" class="nav-link all-staff">
+                                    <i class="fa-regular fa-rectangle-list"></i>
+                                    <p>Danh sách nhân viên</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview pl-4">
+                            <li class="nav-item">
+                                <a href="{{ route('staffs.create') }}" class="nav-link create-staff">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <p>Thêm nhân viên</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     }
