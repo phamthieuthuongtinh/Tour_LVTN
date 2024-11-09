@@ -616,7 +616,7 @@
                                         @php
                                             $da_di=0;
                                             foreach($orderedetails as $or){
-                                                if($or->tour_id==$tour->id){
+                                                if($or->tour_id==$tour->id && $or->departure_date < now()){
                                                     $da_di=1;
                                                     break;
                                                 }
