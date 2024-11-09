@@ -630,6 +630,8 @@
         labels.push(item.type_name);
         data.push(item.count);
     });
+    console.log('labels-pie',labels);
+    console.log('data-pie',data);
     var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
     var pieData = {
         labels: labels,
@@ -650,9 +652,73 @@
       data: pieData,
       options: pieOptions
     })
+
+    function updateChartData(dataPie) {
+      pieChart.data.labels = [];
+        pieChart.data.datasets[0].data = [];
+
+        // Thêm dữ liệu mới
+        dataPie.forEach(function(item) {
+            pieChart.data.labels.push(item.type_name);
+            pieChart.data.datasets[0].data.push(item.count);
+        });
+
+        // Cập nhật lại biểu đồ
+        // pieChart.update();
+        // dataPie.forEach(function(item) {
+        //     labels.push(item.type_name);
+        //     data.push(item.count);
+        // });
+        pieChart.update();
+      }
+
+      function resetChart() {
+        updateChartData(piedata);
+      }
+
+        // Xử lý sự kiện nhấn nút "Làm mới"
+        $('#resetForm_pie').on('click', function() {
+            $('#dateFilterForm_pie')[0].reset(); // Xóa dữ liệu trong form
+            resetChart(); // Làm mới biểu đồ với dữ liệu mặc định
+        });
+      // Xử lý sự kiện thay đổi bộ lọc
+      $('#dateFilterForm_pie').on('submit', function(event) {
+          event.preventDefault(); // Ngăn chặn gửi form theo cách truyền thống
+
+          var startDate = $('#startDate_pie').val();
+          var business_id = $('#business_id_pie').val();
+          var endDate = $('#endDate_pie').val();
+          var _token = $('input[name="_token"]').val();
+
+          if (startDate && endDate || business_id) {
+              $.ajax({
+                  url: "{{ route('dashboard.filter_pie_dashboard') }}",
+                  method: "POST",
+                  dataType: "JSON",
+                  data: {
+                      startDate: startDate,
+                      endDate: endDate,
+                      business_id:business_id,
+                      _token: _token
+                  },
+                  success: function(data) {
+                      // Kiểm tra dữ liệu nhận được từ AJAX
+                      console.log('Dữ liệu nhận được:', data);
+
+                      // Cập nhật dữ liệu cho biểu đồ
+                      updateChartData(data);
+                  },
+                  error: function(xhr, status, error) {
+                      console.error('Lỗi khi lấy dữ liệu:', status, error);
+                  }
+              });
+          } else {
+              alert('Vui lòng nhập thông tin cần lọc.');
+          }
+      });
   });
 </script>
-
+{{-- Biểu đồ đường --}}
 <script>
   $(document).ready(function(){
     var ticksStyle = {
@@ -684,75 +750,144 @@
     console.log(max);
     var mode = 'index'
     var intersect = true
-  console.log(visitor);
-  console.log(databusiness);
-    var $visitorsChart = $('#visitors-chart')
-  // eslint-disable-next-line no-unused-vars
-  var visitorsChart = new Chart($visitorsChart, {
-    data: {
-      // labels:[1, 2, 3, 4, 5, 6, 7,8,9,10,11,12],
-      labels:labels,
-      datasets: [{
-        type: 'line',
-        data: datavisitor,
-        backgroundColor: 'transparent',
-        borderColor: '#007bff',
-        pointBorderColor: '#007bff',
-        pointBackgroundColor: '#007bff',
-        fill: false
-        // pointHoverBackgroundColor: '#007bff',
-        // pointHoverBorderColor    : '#007bff'
+    console.log('cần',visitor);
+    console.log(databusiness);
+      var $visitorsChart = $('#visitors-chart')
+    // eslint-disable-next-line no-unused-vars
+    var visitorsChart = new Chart($visitorsChart, {
+      data: {
+        // labels:[1, 2, 3, 4, 5, 6, 7,8,9,10,11,12],
+        labels:labels,
+        datasets: [{
+          type: 'line',
+          data: datavisitor,
+          backgroundColor: 'transparent',
+          borderColor: '#007bff',
+          pointBorderColor: '#007bff',
+          pointBackgroundColor: '#007bff',
+          fill: false
+          // pointHoverBackgroundColor: '#007bff',
+          // pointHoverBorderColor    : '#007bff'
+        },
+        {
+          type: 'line',
+          data: databusiness,
+          backgroundColor: 'tansparent',
+          borderColor: '#ced4da',
+          pointBorderColor: '#ced4da',
+          pointBackgroundColor: '#ced4da',
+          fill: false
+          // pointHoverBackgroundColor: '#ced4da',
+          // pointHoverBorderColor    : '#ced4da'
+        }
+      ]
       },
-      {
-        type: 'line',
-        data: databusiness,
-        backgroundColor: 'tansparent',
-        borderColor: '#ced4da',
-        pointBorderColor: '#ced4da',
-        pointBackgroundColor: '#ced4da',
-        fill: false
-        // pointHoverBackgroundColor: '#ced4da',
-        // pointHoverBorderColor    : '#ced4da'
-      }
-    ]
-    },
-    options: {
-      maintainAspectRatio: false,
-      tooltips: {
-        mode: mode,
-        intersect: intersect
-      },
-      hover: {
-        mode: mode,
-        intersect: intersect
-      },
-      legend: {
-        display: false
-      },
-      scales: {
-        yAxes: [{
-          // display: false,
-          gridLines: {
+      options: {
+        maintainAspectRatio: false,
+        tooltips: {
+          mode: mode,
+          intersect: intersect
+        },
+        hover: {
+          mode: mode,
+          intersect: intersect
+        },
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [{
+            // display: false,
+            gridLines: {
+              display: true,
+              lineWidth: '4px',
+              color: 'rgba(0, 0, 0, .2)',
+              zeroLineColor: 'transparent'
+            },
+            ticks: $.extend({
+              beginAtZero: true,
+              suggestedMax: max,
+            }, ticksStyle)
+          }],
+          xAxes: [{
             display: true,
-            lineWidth: '4px',
-            color: 'rgba(0, 0, 0, .2)',
-            zeroLineColor: 'transparent'
-          },
-          ticks: $.extend({
-            beginAtZero: true,
-            suggestedMax: max,
-          }, ticksStyle)
-        }],
-        xAxes: [{
-          display: true,
-          gridLines: {
-            display: false
-          },
-          ticks: ticksStyle
-        }]
+            gridLines: {
+              display: false
+            },
+            ticks: ticksStyle
+          }]
+        }
       }
+    })
+    function resetChart() {
+            var defaultlabel=[]
+            Object.keys(visitor).forEach(function(month) {
+              defaultlabel.push(month); // Đưa tháng vào label
+          });
+
+            updateChartData( defaultlabel,visitor, business);
+        }
+
+        // Xử lý sự kiện nhấn nút "Làm mới"
+        $('#resetForm_line').on('click', function() {
+            $('#dateFilterForm_line')[0].reset(); // Xóa dữ liệu trong form
+            resetChart(); // Làm mới biểu đồ với dữ liệu mặc định
+        });
+    function updateChartData(labels, datavisitor, databusiness) {
+      visitorsChart.data.labels = labels;
+      const visitorArray = Object.values(datavisitor);
+      const businessrArray = Object.values(databusiness);
+      visitorsChart.data.datasets[0].data = visitorArray;
+      visitorsChart.data.datasets[1].data = businessrArray;
+      visitorsChart.update();
     }
-  })
+    $('#dateFilterForm_line').on('submit', function(event) {
+          event.preventDefault(); // Ngăn chặn gửi form theo cách truyền thống
+
+          var startDate = $('#startDate_line').val();
+          // var business_id = $('#business_id').val();
+          var endDate = $('#endDate_line').val();
+          var _token = $('input[name="_token"]').val();
+
+          if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            // Tính số ngày giữa hai ngày
+            const timeDiff = end - start; // tính ra mili giây
+            const dayDiff = timeDiff / (1000 * 3600 * 24); // chuyển mili giây thành ngày
+
+            // Kiểm tra xem khoảng cách có lớn hơn hoặc bằng 0 và nhỏ hơn hoặc bằng 30 không
+            if (dayDiff >= 0 && dayDiff <= 30) {
+
+              $.ajax({
+                  url: "{{ route('dashboard.filter_line_dashboard') }}",
+                  method: "POST",
+                  dataType: "JSON",
+                  data: {
+                      startDate: startDate,
+                      endDate: endDate,
+                    
+                      _token: _token
+                  },
+                  success: function(data) {
+                      // Kiểm tra dữ liệu nhận được từ AJAX
+                      console.log('Dữ liệu nhận được:', data);
+
+                      // Cập nhật dữ liệu cho biểu đồ
+                      updateChartData(data.labels, data.datavisitor, data.databusiness);
+                  },
+                  error: function(xhr, status, error) {
+                      console.error('Lỗi khi lấy dữ liệu:', status, error);
+                  }
+              });
+            } else {
+                alert('Khoảng thời gian phải nằm trong khoảng 30 ngày.');
+            }
+          } else {
+              alert('Vui lòng nhập thông tin cần lọc.');
+          }
+      });
   });
    
 

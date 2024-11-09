@@ -100,6 +100,7 @@
                     </div>
                 </div>
                 <!-- /.card -->
+                @if(Auth::user()->id==1)
                 <div class="col-lg-6">
                     {{-- Biểu đồ đường người tham gia web --}}
                     <div class="card">
@@ -108,7 +109,41 @@
                                 <h3 class="card-title" style="color: red"> Biểu đồ thống kê tài khoản đăng ký</h3>
                                 <a href="javascript:void(0);">Xem báo cáo</a>
                             </div>
+                            <br>
+                            <form id="dateFilterForm_line" method="POST" action="{{ route('dashboard.filter_line_dashboard') }}">
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <div class="form-group mb-2 mr-3">
+                                        <label for="startDate" class="mr-2">Ngày bắt đầu:</label>
+                                        <input type="date" class="form-control" id="startDate_line" name="startDate_line" />
+                                    </div>
+                                    <div class="form-group mb-2 mr-3">
+                                        <label for="endDate" class="mr-2">Ngày kết thúc:</label>
+                                        <input type="date" class="form-control" id="endDate_line" name="endDate_line" />
+                                    </div>
+                                    {{-- @if (Auth::user()->id == 1)
+                                        <div class="form-group mb-2 mr-3">
+                                            <label for="business_id" class="mr-2">Công ty:</label>
+                                            <br>
+                                            <select class="form-control" name="business_id_line" id="business_id_line">
+                                                <option value="">Chọn công ty</option>
+                                                @foreach ($businesses as $key => $busi)
+                                                    <option value="{{ $busi->id }}">{{ $busi->name }}</option>
+                                                @endforeach
+    
+                                            </select>
+                                        </div>
+                                    @endif --}}
+                                </div>
+                                <!-- Đẩy các nút xuống dòng -->
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-primary mr-2" id="applyDateFilter_line">Lọc</button>
+                                    <button type="button" class="btn btn-secondary" id="resetForm_line">Làm mới</button>
+                                </div>
+    
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            </form>
                         </div>
+                       
                         <div class="card-body">
                             <div class="d-flex">
                                 <p class="d-flex flex-column">
@@ -137,6 +172,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
@@ -150,18 +186,54 @@
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
+                            
                         </div>
+                        
                         <!-- /.card-header -->
                         <div class="card-body">
+                          
+                            <form id="dateFilterForm_pie" method="POST" action="{{ route('dashboard.filter_pie_dashboard') }}">
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <div class="form-group mb-2 mr-3">
+                                        <label for="startDate" class="mr-2">Ngày bắt đầu:</label>
+                                        <input type="date" class="form-control" id="startDate_pie" name="startDate_pie" />
+                                    </div>
+                                    <div class="form-group mb-2 mr-3">
+                                        <label for="endDate" class="mr-2">Ngày kết thúc:</label>
+                                        <input type="date" class="form-control" id="endDate_pie" name="endDate_pie" />
+                                    </div>
+                                    @if (Auth::user()->id == 1)
+                                        <div class="form-group mb-2 mr-3">
+                                            <label for="business_id" class="mr-2">Công ty:</label>
+                                            <br>
+                                            <select class="form-control" name="business_id_pie" id="business_id_pie">
+                                                <option value="">Chọn công ty</option>
+                                                @foreach ($businesses as $key => $busi)
+                                                    <option value="{{ $busi->id }}">{{ $busi->name }}</option>
+                                                @endforeach
+    
+                                            </select>
+                                        </div>
+                                    @endif
+                                </div>
+                                <!-- Đẩy các nút xuống dòng -->
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-primary mr-2" id="applyDateFilter_pie">Lọc</button>
+                                    <button type="button" class="btn btn-secondary" id="resetForm_pie">Làm mới</button>
+                                </div>
+    
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            </form>
+                            <br>
                             <div class="row">
-                                <div class="col-md-7">
+                                <div class="col-md-12">
                                     <div class="chart-responsive">
-                                        <canvas id="pieChart" height="278"></canvas>
+                                        <canvas id="pieChart" height="160"></canvas>
                                     </div>
                                     <!-- ./chart-responsive -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-md-5">
+                                {{-- <div class="col-md-5">
                                     <h6>Tỉ lệ tăng tháng này</h6>
                                     
                                     <ul class="nav nav-pills flex-column">
@@ -186,7 +258,7 @@
                                     @endforeach
                                        
                                     </ul>
-                                </div>
+                                </div> --}}
                                 <!-- /.col -->
                             </div>
                             <!-- /.row -->
@@ -198,10 +270,12 @@
                         <!-- /.footer -->
                     </div>
                 </div>
+                @if (Auth::user()->id!=1)
                 <div class="col-lg-6">
-                    {{-- Biểu đồ tròn --}}
-
                     {{-- Bảng sản phẩm --}}
+                   
+                        
+                   
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">Tour bán chạy gần đây</h3>
@@ -213,147 +287,141 @@
                                     <i class="fas fa-bars"></i>
                                 </a>
                             </div>
+                            
                         </div>
                         <div class="card-body table-responsive p-0">
-                            <table class="table table-striped table-valign-middle">
+                            <table class="table table-striped table-valign-middle" id="myTable">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Price</th>
-                                        <th>Sales</th>
-                                        <th>More</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Tên tour</th>
+                                        <th>Địa điểm</th>
+                                        {{-- @if(Auth::user()->id==1)
+                                        <th>Doanh nghiệp</th>
+                                        @endif --}}
+                                        <th>Loại</th>
+                                        <th>Khác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Some Product
-                                        </td>
-                                        <td>$13 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                12%
-                                            </small>
-                                            12,000 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Another Product
-                                        </td>
-                                        <td>$29 USD</td>
-                                        <td>
-                                            <small class="text-warning mr-1">
-                                                <i class="fas fa-arrow-down"></i>
-                                                0.5%
-                                            </small>
-                                            123,234 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Amazing Product
-                                        </td>
-                                        <td>$1,230 USD</td>
-                                        <td>
-                                            <small class="text-danger mr-1">
-                                                <i class="fas fa-arrow-down"></i>
-                                                3%
-                                            </small>
-                                            198 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Perfect Item
-                                            <span class="badge bg-danger">NEW</span>
-                                        </td>
-                                        <td>$199 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                63%
-                                            </small>
-                                            87 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Perfect Item
-                                            <span class="badge bg-danger">NEW</span>
-                                        </td>
-                                        <td>$199 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                63%
-                                            </small>
-                                            87 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Perfect Item
-                                            <span class="badge bg-danger">NEW</span>
-                                        </td>
-                                        <td>$199 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                63%
-                                            </small>
-                                            87 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    @foreach ($tour_sale_ganday as $ts )
+                                        <tr>
+                                            <td>
+                                                <img src="{{ asset('upload/tours/' . $ts->image) }}" alt="" width=80 height=70>
+                                            
+                                            </td>
+                                          
+                                            <td>
+                                                <a href="{{route('chi-tiet-tour',[$ts->slug])}}">{{$ts->title}}</a>
+                                            
+                                            </td>
+                                            
+                                            <td>
+                                                {{$ts->category->title}}
+                                            
+                                            </td>
+                                              
+                                            <td>
+                                                {{$ts->type->type_name}}
+                                            
+                                            </td>
+                                            
+                                            
+                                            {{-- <td>
+                                                <a href="#" class="text-muted">
+                                                    <i class="fas fa-search"></i>
+                                                </a>
+                                            </td> --}}
+                                            <td>
+                                                
+                                                {{-- Perfect Item --}}
+                                                <span class="badge bg-danger">Hot</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                  
                 </div>
-                <div class="col-lg-6">
+                @endif
+                @if (Auth::user()->id==1)
+                <div class="col-lg-12">
+                    {{-- Bảng sản phẩm --}}
+                   
+                        
+                   
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">Tour bán chạy gần đây</h3>
+                            <div class="card-tools">
+                                <a href="#" class="btn btn-tool btn-sm">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <a href="#" class="btn btn-tool btn-sm">
+                                    <i class="fas fa-bars"></i>
+                                </a>
+                            </div>
+                            
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-striped table-valign-middle" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Hình ảnh</th>
+                                        <th>Tên tour</th>
+                                        <th>Địa điểm</th>
+                                       
+                                       
+                                      
+                                        <th>Loại</th>
+                                        <th>Doanh nghiệp</th>
+                                        <th>Khác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($tour_sale_ganday as $ts )
+                                        <tr>
+                                            <td>
+                                                <img src="{{ asset('upload/tours/' . $ts->image) }}" alt="" width=80 height=70>
+                                            
+                                            </td>
+                                          
+                                            <td>
+                                                <a href="{{route('chi-tiet-tour',[$ts->slug])}}">{{$ts->title}}</a>
+                                            
+                                            </td>
+                                            
+                                            <td>
+                                                {{$ts->category->title}}
+                                            
+                                            </td>
+                                              
+                                        
+                                            
+                                            
+                                            <td>
+                                                 {{$ts->type->type_name}}
+                                            </td>
+                                            <td>
+                                                {{$ts->user->name}}
+                                            </td>
+                                            <td>
+                                                
+                                                {{-- Perfect Item --}}
+                                                <span class="badge bg-danger">Hot</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  
+                </div>
+                @endif
+                {{-- <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">Online Store Overview</h3>
@@ -405,7 +473,7 @@
                             <!-- /.d-flex -->
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <!-- /.col-md-6 -->

@@ -152,7 +152,8 @@ Route::get('/checkout-return', [MethodPaymentController::class, 'vnpayReturn'])-
 // Dashboard
 Route::get('/dashboard/statistic', [DashboardController::class, 'show_dashboard'])->name('dashboard.show_dashboard');
 Route::post('/dashboard/statistic-filter', [DashboardController::class, 'filterStatistics'])->name('dashboard.filter_dashboard');
-
+Route::post('/dashboard/statistic-filter-line', [DashboardController::class, 'filter_line_dashboard'])->name('dashboard.filter_line_dashboard');
+Route::post('/dashboard/statistic-filter-pie', [DashboardController::class, 'filter_pie_dashboard'])->name('dashboard.filter_pie_dashboard');
 
 //Blog
 Route::resource('/blogs', BlogController::class);

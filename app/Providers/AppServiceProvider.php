@@ -15,6 +15,7 @@ use App\Models\Statistical;
 use App\Models\Statisticalbusinesses;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
@@ -86,6 +87,8 @@ class AppServiceProvider extends ServiceProvider
     }
     public function getPieDataMonth()
     {
+
+        
         $orders = Order::where('order_status', 2)->get();
         $orders_code = $orders->pluck('order_code')->toArray();
         $order_details = Orderdetail::whereIn('order_code', $orders_code)->get();
@@ -127,15 +130,17 @@ class AppServiceProvider extends ServiceProvider
         if (isset(Auth::user()->id)) {
 
             if (Auth::user()->id == 1) {
+                // if(session::get('business_id')){
+                //     $tours = Tour::whereIn('id', $percentageIncrease->keys())->where('business_id',session::get('business_id'))->with('type')->get();
+                // }
+                // else{
+                //     $tours = Tour::whereIn('id', $percentageIncrease->keys())->with('type')->get();
+                // }
                 $tours = Tour::whereIn('id', $percentageIncrease->keys())->with('type')->get();
-                // $tour_count_by_type = $tours->groupBy('type.type_name')->map(function ($group) {
-                //     return $group->count(); 
-                // });
+        
             } else {
                 $tours = Tour::whereIn('id', $percentageIncrease->keys())->where('business_id', Auth::user()->id)->with('type')->get();
-                // $tour_count_by_type = $tours->groupBy('type.type_name')->map(function ($group) {
-                //     return $group->count(); 
-                // });
+
 
             }
             $percent = [];
