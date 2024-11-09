@@ -30,9 +30,11 @@
                                <a href="{{route('chi-tiet-tour', ['slug' => $order->tour->slug])}}">{{ $order->tour->title }}</a> 
                             </td>
                             <td>
+                               
+                                
                                 <span class="current-departure-date-{{ $order->order_code }}">
                                     {{ $order->departure_date }}
-                                    @if($order->departure_date>$now && $order->order->order_status!=3)
+                                    @if($order->departure_date>$now && $order->order->order_status!=4)
                                     <button class="btn btn-link btn-edit-date" data-id="{{ $order->order_code }}"> <!-- Sử dụng 'data-id' -->
                                         <i class="fa fa-retweet" title="Đổi ngày"></i>
                                     </button>
@@ -47,6 +49,7 @@
                                         <option value="{{ $date->departure_date }}">{{ $date->departure_date }}</option>
                                     @endforeach
                                 </select>
+
                             </td>
 
                             
@@ -131,8 +134,10 @@
                                  Đã thanh toán
                                 @elseif($order->order->order_status==1)
                                  Chưa thanh toán
-                                @else
+                                @elseif($order->order->order_status==3)
                                 Đang xử lý hoàn tiền
+                                @else
+                                Đã hoàn tiền
                                 @endif
                                 
                             </td>

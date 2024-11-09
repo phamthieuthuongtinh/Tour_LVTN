@@ -614,9 +614,10 @@
                                             @endphp
                                         </label>
                                         @php
+                                        use Carbon\Carbon;
                                             $da_di=0;
                                             foreach($orderedetails as $or){
-                                                if($or->tour_id==$tour->id && $or->departure_date < now()){
+                                                if($or->tour_id==$tour->id && Carbon::parse($or->departure_date) < now()){
                                                     $da_di=1;
                                                     break;
                                                 }
