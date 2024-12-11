@@ -33,11 +33,11 @@
                     <th>#</th>
                     <th>Tiêu đề</th>
                     <th width="300">Mô tả</th>
-                    <th>Hình ảnh</th>
+                    {{-- <th>Hình ảnh</th> --}}
                     <th>Slug</th>
-                    <th>Trạng thái</th>
-                    <th>Ngày tạo</th>
-                    <th>Ngày cập nhật</th>
+                    {{-- <th>Trạng thái</th> --}}
+                    {{-- <th>Ngày tạo</th>
+                    <th>Ngày cập nhật</th> --}}
                     <th>Thao tác</th>
                   </tr>
                   </thead>
@@ -47,17 +47,17 @@
                         <td>{{$key}}</td>
                         <td>{{$cate->title}}</td>
                         <td>{{$cate->description}}</td>
-                        <td><img src="{{asset('upload/categories/'.$cate->image)}}" alt="" width=150 height=120></td>
+                        {{-- <td><img src="{{asset('upload/categories/'.$cate->image)}}" alt="" width=150 height=120></td> --}}
                         <td>{{$cate->slug}}</td>
-                        <td>
+                        {{-- <td>
                             @if($cate->status==1)
                             <a href="#"><span style="color:blue; font-size:16px;" class="fa-thumb-styling fa fa-thumbs-up"></span> Hiển thị</a>
                             @else
                             <a href="#"><span style="color:red; font-size:16px;" class="fa-thumb-styling fa fa-thumbs-down"></span> Ẩn</a>
                             @endif
-                        </td>
-                        <td>{{$cate->created_at}}</td>
-                        <td>{{$cate->updated_at}}</td>
+                        </td> --}}
+                        {{-- <td>{{$cate->created_at}}</td>
+                        <td>{{$cate->updated_at}}</td> --}}
                         <td>
                           <div class="btn-group">
                               <a href="{{ route('categories.edit', [$cate->id]) }}" class="btn btn-warning mr-1" title="Chỉnh sửa">

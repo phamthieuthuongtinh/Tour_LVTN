@@ -14,6 +14,7 @@ use Carbon\Carbon;
 // use App\Providers\AppServiceProvider;
 use App\Models\Statisticalbusinesses;
 use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Log;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -190,7 +191,7 @@ class DashboardController extends Controller
             ->get()
             ->pluck('total_visitors', 'month');
         }
-    
+       
         $period = new \DatePeriod(
             new \DateTime($startDate),
             new \DateInterval('P1D'),
@@ -304,7 +305,7 @@ class DashboardController extends Controller
             $endDate = date('Y-m-d', strtotime($endDate));
         }
         
-        $orders = Order::where('order_status', 2)->get();
+        $orders = Order::where('order_status', 2)->whereBetween('created_at', [$startDate, $endDate])->get();
         $orders_code = $orders->pluck('order_code')->toArray();
         $order_details = Orderdetail::whereIn('order_code', $orders_code)->get();
 
@@ -318,8 +319,8 @@ class DashboardController extends Controller
                     //     session(['business_id' => $business_id]);
                     // }
                     if($startDate && $endDate) {
-                        $tours = Tour::whereIn('id', $count->keys())->where('business_id',$business_id)->whereBetween('created_at', [$startDate, $endDate])->with('type')->get();
-            
+                        $tours = Tour::whereIn('id', $count->keys())->where('business_id',$business_id)->with('type')->get();
+
                         // $piedata = $this->appService->getPieDataMonth();
                        
                     }
@@ -330,10 +331,10 @@ class DashboardController extends Controller
                     }
                 }
                else{
-                    $tours = Tour::whereIn('id', $count->keys())->whereBetween('created_at', [$startDate, $endDate])->with('type')->get();
+                    $tours = Tour::whereIn('id', $count->keys())->with('type')->get();
                }
             } else {
-                $tours = Tour::whereIn('id', $count->keys())->where('business_id', Auth::user()->id)->whereBetween('created_at', [$startDate, $endDate])->with('type')->get();
+                $tours = Tour::whereIn('id', $count->keys())->where('business_id', Auth::user()->id)->with('type')->get();
             }
             $tour_count_by_type = [];
             foreach ($tours as $tour) {

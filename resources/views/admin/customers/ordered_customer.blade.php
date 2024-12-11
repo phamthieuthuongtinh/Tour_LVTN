@@ -34,7 +34,7 @@
                                 
                                 <span class="current-departure-date-{{ $order->order_code }}">
                                     {{ $order->departure_date }}
-                                    @if($order->departure_date>$now && $order->order->order_status!=4)
+                                    @if(($order->departure_date>$now && $order->order->order_status!=4) )
                                     <button class="btn btn-link btn-edit-date" data-id="{{ $order->order_code }}"> <!-- Sử dụng 'data-id' -->
                                         <i class="fa fa-retweet" title="Đổi ngày"></i>
                                     </button>
@@ -183,7 +183,7 @@
                                             <td>1</td>
                                             <td>Người lớn (Người đặt tour)</td>
                                             <td>{{$customer->customer_name}}</td>
-                                            <td>{{$customer->phone}}</td>
+                                            <td></td>
                                             <td>{{$customer->phone}}</td>
                                             <td>{{$order->note}}</td>
                                             <td>

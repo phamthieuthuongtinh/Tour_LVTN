@@ -52,7 +52,7 @@
             </div>
             <div class="col-md-9 col-xs-9 bx-title-lst-tour text-center">
                 <div class="w100 fl title-tour1 wow fadeInUp">
-                    <h1 style="color: #86B817;font-size: 30px;"> Các Tour Giảm Giá </h1>
+                    <h1 style="color: #86B817;font-size: 30px;"> Các Tour Du Lịch {{substr($category->title,10)}} Giảm Giá </h1>
                 </div>
                 <div id="tour-list" class="row g-4 justify-content-center">
                     @foreach ($tours as $key => $tour)

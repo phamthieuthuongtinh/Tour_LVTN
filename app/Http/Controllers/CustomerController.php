@@ -15,6 +15,7 @@ use App\Models\Like;
 use App\Models\Tour;
 use App\Models\Type;
 use App\Models\Member;
+use App\Models\Discount;
 use Carbon\Carbon;
 class CustomerController extends Controller
 {
@@ -40,9 +41,11 @@ class CustomerController extends Controller
                 if($recommend!=null && $recommend->created_at){
                     $currentDate = now();
                     $createdAt = $recommend->updated_at;
-
+                 
                     if ($createdAt->diffInWeeks($currentDate) >= 2) {
+                        
                         $customerPreference=$customer->hobby;
+                        
                         $result = $this->analyzePreferences($customerPreference);
                      
                        
@@ -52,6 +55,7 @@ class CustomerController extends Controller
                         // Convert the array to a comma-separated string
                         $recommendTourIdsString = implode(',', $recommendTourIds);
                         $recommend->recommend = $recommendTourIdsString;
+                        $recommend->updated_at = now();
                         $recommend->save();
                     }
                 }
@@ -109,16 +113,27 @@ class CustomerController extends Controller
     }
     public function update_order_date(Request $request,string $id){
         $order = Orderdetail::where('order_code',$id)->first();
-
+        $departure=Departure::where('tour_id',$order->tour_id)->where('departure_date', $order->departure_date)->first();
+        $quantity_order=$order->nguoi_lon+$order->tre_em+$order->tre_nho+$order->so_sinh;
+        $departure->quantity+=$quantity_order;
         // Cập nhật ngày khởi hành
         $order->departure_date = $request->input('departure_date');
         $order->save();
-    
+        $departure->save();
+        //update so luong
+        $departure=Departure::where('tour_id',$order->tour_id)->where('departure_date', $order->departure_date)->first();
+        $departure->quantity-=$quantity_order;
+        $departure->save();
         return response()->json(['success' => true]);
+       
+       
     }
     public function liked(string $id){
         $likes=Like::where('customer_id',$id)->with('tour')->get();
-        return view('admin.customers.liked_customer',compact('likes'));
+        $tour_id=$likes->pluck('tour_id')->toArray();
+        $tours=Tour::whereIn('id',$tour_id)->get();
+        $tour_sales=Discount::whereIn('tour_id',$tour_id)->get();
+        return view('admin.customers.liked_customer',compact('likes','tour_sales','tours'));
     }
     public function index()
     {
@@ -217,7 +232,8 @@ class CustomerController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $customer=Customer::where('customer_id',$id)->first();
+        return view('admin.customers.edit',compact('customer'));
     }
 
     /**
@@ -225,7 +241,17 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $customer=Customer::find($id);
+        $data = $request->all();
+        $customer->customer_name=$data['customer_name'];
+        $customer->email=$data['email'];
+        $customer->phone=$data['phone'];
+        $customer->job=$data['job'];
+        $customer->age=$data['age'];
+        $customer->hobby=$data['hobby'];
+        $customer->save();
+        toastr()->success('Cập nhật thông tin thành công!');
+        return view('admin.customers.infor_customer',compact('customer'));
     }
 
     /**
@@ -235,6 +261,31 @@ class CustomerController extends Controller
     {
        
     }
-
+    public function showChangePasswordForm( string $id)
+    {
+        $customer=Customer::find($id);
+        return view('admin.customers.changepass', compact('customer'));
+    }
+    
+    public function changePassword(Request $request, string $id)
+    {
+        $data= $request->all();
+        $customer=Customer::find($id);
+        $current_password = Hash::make($data['current_password']);
+        if (!Hash::check($data['current_password'], $customer->password)) {
+            toastr()->error('Mật khẩu cũ không đúng!');
+            return back();
+        }
+        else if($data['new_password_confirmation']==$data['new_password']){
+            $customer->password= Hash::make($data['new_password']);
+            $customer->save();
+            toastr()->success('Thay đổi mật khẩu thành công!');
+            return view('admin.customers.infor_customer',compact('customer'));
+        }
+        else{
+            toastr()->error('Xác nhận mật khẩu mới không đúng!');
+            return back();
+        }
+    }
     
 }

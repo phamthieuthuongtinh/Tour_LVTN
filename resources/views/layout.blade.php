@@ -192,7 +192,7 @@
                 <div class="nav-item dropdown" style="margin-right: 10px !important;">
                     <div style="padding: 0px;">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="{{ asset('frontend/img/user.png') }}" alt="Avatar" class="rounded-circle" 
+                            <img src="{{ asset('frontend/img/user-3.png') }}" alt="Avatar" class="rounded-circle" 
                             style="width: 60px; height: 60px; object-fit: cover; border: 4px solid violet;">
                         </a>
                     </div>
@@ -1226,7 +1226,7 @@
                 $('.package-item').each(function() {
                     var price = parseInt($(this).find('h4').text().replace(/[^0-9]/g, ''));
                     var tourType = $(this).find('small.border-end').eq(0).text().trim();
-                    var tourFrom = $(this).find('small.border-end1').eq(2).text().trim();
+                    var tourFrom = $(this).find('small.border-end').eq(2).text().trim();
 
    
           
@@ -1546,6 +1546,13 @@
                         $('.btn-edit-date[data-id="' + orderId + '"]').show();
                         alert('Cập nhật ngày thành công!');
                         location.reload();
+                    },
+                    error: function(response) {
+                        if (response.responseJSON && response.responseJSON.message) {
+                            alert(response.responseJSON.message);
+                        } else {
+                            alert('Đã xảy ra lỗi. Vui lòng thử lại!');
+                        }
                     }
                 });
             });

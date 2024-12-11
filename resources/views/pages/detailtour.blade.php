@@ -34,7 +34,17 @@
                     <div class="container">
                         <div class="row g-5">
                             <div class="col-lg-6 wow fadeInUp mb-3" data-wow-delay="0.1s" style="min-height: 400px;">
-                               
+                                @if($gallery ->isEmpty())
+                                <ul id="imageGallery" class="d-flex justify-content-start mt-3">
+                                   
+                                        <li data-thumb="{{ asset('upload/tours/'.$tour->image) }}" data-src="{{ asset('upload/tours/'.$tour->image) }}">
+                                            <img style="width: 435px; height: 350px; object-fit: cover;"
+                                                alt=""
+                                                src="{{ asset('upload/tours/'.$tour->image) }}" />
+                                        </li>
+                                   
+                                </ul>
+                                @else
                                 <!-- Thư viện hình ảnh bên dưới -->
                                 <ul id="imageGallery" class="d-flex justify-content-start mt-3">
                                     @foreach ($gallery as $key => $gal)
@@ -45,6 +55,7 @@
                                         </li>
                                     @endforeach
                                 </ul>
+                                @endif
                             </div>
 
 
@@ -58,15 +69,7 @@
                                             style="font-family:arial,helvetica,sans-serif">{!! $tour->description !!}</span></span>
                                 </p>
                                 <div class="row gy-2 gx-4 mb-4">
-                                    <div class="col-sm-6">
-                                        <p id="" class="mb-0"><i
-                                                class="fa fa-calendar-alt text-primary me-2"></i>Thời gian:
-                                            {{ $tour->tour_time }}</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="mb-0"><i class="fa fa-users text-primary me-2"></i>Số người tối đa:
-                                            {{ $tour->quantity }}</p>
-                                    </div>
+                                   
                                     <div class="col-sm-6">
                                         <p class="mb-0"><i class="fa fa-plane text-primary me-2"></i>Phương tiện:
                                             {{ $tour->vehicle }}</p>
@@ -80,7 +83,7 @@
                                         </p>
                                     </div>
                                     <div class="col-sm-6">
-                                        <p class="mb-0"><i class="fa fa-building text-primary me-2"></i>Thuộc công ty:
+                                        <p class="mb-0"><i class="fa fa-building text-primary me-2"></i>Công ty:
                                             {{ $tour->user->name }}</p>
                                     </div>
                                     <input type="hidden" id="tour_seen_id{{ $tour->id }}"
@@ -601,7 +604,7 @@
                     <div class="comment-section">
                         <div class="comment-input">
                             <div class="comment-avatar">
-                                <img src="{{ asset('frontend/img/user.png') }}" alt="Avatar" class="avatar-img">
+                                <img src="{{ asset('frontend/img/user-3.png') }}" alt="Avatar" class="avatar-img">
                             </div>
                             <div class="comment-content">
                                 <form action="{{ route('comment.store') }}" method="post" class="comment-form"
@@ -660,7 +663,7 @@
                             @foreach ($comments as $key => $cmt)
                                 <div class="comment-item">
                                     <div class="comment-avatar">
-                                        <img src="{{ asset('frontend/img/user-1.jpg') }}" alt="Avatar"
+                                        <img src="{{ asset('frontend/img/user-3.png') }}" alt="Avatar"
                                             class="avatar-img">
                                     </div>
                                     <div class="comment-details">
@@ -685,7 +688,7 @@
                                                 <div
                                                     class="admin-reply mt-1 p-1 bg-light border rounded d-flex align-items-start">
                                                     <div class="comment-avatar" style="margin-top:1%">
-                                                        <img src="{{ asset('frontend/img/user.png') }}"
+                                                        <img src="{{ asset('frontend/img/user-2.jpg') }}"
                                                             alt="Admin Avatar" class="avatar-img">
                                                     </div>
                                                     <div class="admin-reply-details ms-2">

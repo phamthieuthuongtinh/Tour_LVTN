@@ -38,7 +38,7 @@
                     <select class="form-control" name="category">
                         <option  {{1==$blog->category ? 'selected':''}} value="1">Tin tức du lịch</option>
                         <option {{2==$blog->category ? 'selected':''}} value="2">Cẩm nang du lịch</option>
-                        <option  {{3==$blog->category ? 'selected':''}}value="3">Kinh nghiệm du lịch</option>
+                        <option  {{3==$blog->category ? 'selected':''}} value="3">Kinh nghiệm du lịch</option>
                     </select>
                 </div>
                 <div class="form-group">

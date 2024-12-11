@@ -190,7 +190,7 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2024-2025 <a href="home">AdminTravel</a>.</strong>
+    <strong>Copyright &copy; 2024-2025 <a href="home">TripGenie</a>.</strong>
 Đăng ký bản quyền.
     <div class="float-right d-none d-sm-inline-block">
       <b>Phiên bản</b> 3.2.0
@@ -1005,6 +1005,12 @@
             else if (currentUrl.match(/\/tours\/itineraries\/\d+$/)) {
                 $('.create-iti').addClass('active');
             }
+            else if (currentUrl.match(/\/tours\/itinerary\/change\/\d+\/\d+$/)) {
+                $('.create-iti').addClass('active');
+            }
+            else if (currentUrl.match(/\/tours\/itinerary\/add\/\d+\/\d+$/)) {
+                $('.create-iti').addClass('active');
+            }
             else if (currentUrl.match(/\/tours\/service$/)) {
                 $('.manage-service').addClass('active');
             }
@@ -1147,7 +1153,7 @@
             }
             // Trang chỉnh sửa (/categories/{id}/edit)
             else if (currentUrl.match(/\/discounts\/\d+\/edit$/)) {
-                $('.edit-discount').addClass('active');
+                $('.all-discount').addClass('active');
             }
         }
         if (currentUrl.includes('/customer-tour')) {

@@ -350,7 +350,7 @@ class IndexController extends Controller
     }
     public function search(Request $request){
         $query = Tour::query(); // Khởi tạo một query builder cho model Tour
-     
+        $key=$request->tour_to;
         if ($request->has('tour_to') && $request->tour_to != null) {
             $query->where('title', 'like', '%' . $request->tour_to . '%');
         }
@@ -383,6 +383,7 @@ class IndexController extends Controller
             // dd($request->departure_date);
         }
         $tours=$tours_get;
+     
         // Thực hiện truy vấn và lấy kết quả
         $tour_id_sale=$tours->pluck('id')->toArray();
         $tour_sales=Discount::whereIn('tour_id',$tour_id_sale)->get();
@@ -398,15 +399,18 @@ class IndexController extends Controller
            $tour->avg_rating = isset($avg_rating[$tourId]) ? $avg_rating[$tourId] : 0;
                
        }
-   
+       $type_tour_id=$tours->pluck('type_id')->toArray();
+       $tourfroms = $tours->unique('tour_from');
+       $typetours=Type::whereIn('id',$type_tour_id)->get();
+        $tour_to=Category::whereNotIn('id', [5, 6])->orderBy('title', 'asc')->get();
         if(Session::get('customer_id')){
             $customer_id=Session::get('customer_id');
             $likes=Like::where('customer_id',$customer_id)->get();
-            return view('pages.search',compact('tours','likes','tour_sales'));
+            return view('pages.search',compact('tours','likes','tour_sales','key','typetours','tour_to','tourfroms'));
            
         }
        else{
-            return view('pages.search',compact('tours','tour_sales'));
+            return view('pages.search',compact('tours','tour_sales','key','typetours','tour_to','tourfroms'));
        }
     }
 

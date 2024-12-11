@@ -299,7 +299,7 @@ class ToursController extends Controller
         // dd($tour);
         //thông tin dịch vụ, comment, reply, đánh giá, danh sách ngày khởi hành, ngày khởi hành gần nhất của tour
         $service = Service::where('tour_id', $tour->id)->first();
-        $comments = Comment::where('comment_tour_id', $tour->id)->where('status', 1)->whereNull('comment_parent_comment')->get();
+        $comments = Comment::where('comment_tour_id', $tour->id)->where('status','!=',2)->whereNull('comment_parent_comment')->get();
         $reply=Comment::where('comment_tour_id',$tour->id)->where('status',1)->whereNotNull('comment_parent_comment')->get();
         $ratings=Rating::where('tour_id',$tour->id)->get();
         $departures=Departure::where('tour_id',$tour->id)->where('departure_date', '>=', Carbon::today())->orderby('departure_date','ASC')->get();
@@ -366,7 +366,7 @@ class ToursController extends Controller
         $order_codes = $ordered->pluck('order_code')->toArray();
         $orderedetails = OrderDetail::whereIn('order_code', $order_codes)->with('tour')->with('order')->with('coupon')->get();
         $likes=Like::where('customer_id',$customer_id)->get();
-        $gallery=Gallery::orderBy('id','DESC')->get();
+        $gallery=Gallery::orderBy('id','DESC')->where('tour_id',$tour->id)->get();
         return view('pages.detailtour',compact('tour','departures','nearestDeparture','comments','reply','ratings','itineraries','service','relate','likes','gallery','tour_sales','sale','orderedetails'));
     }
     

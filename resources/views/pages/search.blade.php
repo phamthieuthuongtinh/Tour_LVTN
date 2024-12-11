@@ -2,10 +2,59 @@
 @section('content')
 <div class="container box-list-tour">
     <div class="row">
-        <div class="col-md-12 col-xs-12 bx-title-lst-tour text-center">
-            <div class="w100 fl title-tour1 wow fadeInUp">
-                <h1 style="color: #86B817;font-size: 30px;"> Kết quả tìm kiếm </h1>
+        <div class="col-md-3 col-xs-9">
+            <h4 class="mb-3">Bộ Lọc Tìm Kiếm</h4>
+            <div class="filter-box bg-white p-3 shadow-lg rounded" style="border-radius:10px !important;">
+
+                <form id="filterForm" method="GET" action="">
+                    <input type="hidden" class="category_id" name="category_id" id="" value="13">
+                    <div class="form-group mb-3">
+                        <label for="price">Ngân sách</label>
+                        <select class="form-select tour_price_form" id="price" name="price">
+                            <option value="">Tất cả</option>
+                            <option value="under5">Dưới 5 triệu</option>
+                            <option value="5to10">Từ 5 - 10 triệu</option>
+                            <option value="10to20">Từ 10 - 20 triệu</option>
+                            <option value="over20">Trên 20 triệu</option>
+                        </select>
+                    </div>
+
+                    <!-- Loại tour -->
+                    <div class="form-group mb-3">
+                        <label for="tour_type">Loại tour</label>
+                        <select class="form-select tour_type_form" id="tour_type" name="tour_type">
+                            <option value="">Tất cả</option>
+                            @foreach ($typetours as $type)
+                                <option value="{{ $type->type_name }}">{{ $type->type_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Điểm khởi hành và điểm đến -->
+                    <div class="form-group mb-3">
+                        <label for="tour_from">Điểm khởi hành</label>
+                        <select class="form-select tour_from_form" id="tour_from" name="tour_from">
+                            <option value="">Tất cả</option>
+                            @foreach ($tourfroms as $from)
+                                <option value="{{ $from->tour_from }}">{{ $from->tour_from }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-between">
+                        {{-- <button type="submit" id="apply-filters" class="btn btn-primary">Áp dụng</button> --}}
+                        <a href="#" id="resetButton" class="btn btn-secondary">Làm mới</a>
+
+                    </div>
+
+                </form>
             </div>
+
+        </div>
+        <div class="col-md-9 col-xs-12 bx-title-lst-tour text-center">
+            <div class="w100 fl title-tour1 wow fadeInUp">
+                <h1 style="color: #86B817;font-size: 30px;"> Kết quả tìm kiếm "{{$key}}"</h1>
+            </div>
+           
             <div class="row g-4 justify-content-center">
                 @foreach ($tours as $key => $tour)
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -18,7 +67,7 @@
                             <small class="flex-fill text-center border-end border-bottom py-2"><i class="fa fa-mountain text-primary me-2"></i>{{ $tour->type->type_name }}</small>
                             <small class="flex-fill text-center border-end border-bottom py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>{{ $tour->so_ngay }} Ngày - {{ $tour->so_ngay }}</small>
                             
-                            <small class="flex-fill text-center py-2 w-100"><i class="fa fa-plane text-primary me-2"></i>{{ $tour->tour_from }}</small>
+                            <small class="flex-fill text-center border-end border-bottom py-2 w-100"><i class="fa fa-plane text-primary me-2"></i>{{ $tour->tour_from }}</small>
                         </div>
                         <div class="text-center p-4">
                             @php

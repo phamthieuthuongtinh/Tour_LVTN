@@ -4,7 +4,15 @@
     <div class="container-xxl py-4">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h1 class="bg-white text-center text-primary px-3">Tin tức du lịch</h1>
+                <h1 class="bg-white text-center text-primary px-3">
+                    @if($type==1)
+                        Tin tức du lịch
+                    @elseif($type==2)
+                        Cẩm nang du lịch
+                    @else
+                        Kinh nghiệm du lịch
+                    @endif
+                </h1>
             </div>
             <div class="container mt-4">
                 <h1 class="my-4">Danh sách bài blog</h1>
@@ -36,6 +44,7 @@
                             </div>
                         </div>
                     </div>
+                    <br>
                 @endforeach
 
                 <!-- Phân trang -->

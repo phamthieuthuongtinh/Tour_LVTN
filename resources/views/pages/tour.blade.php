@@ -52,7 +52,7 @@
             </div>
             <div class="col-md-9 col-xs-9 bx-title-lst-tour text-center">
                 <div class="w100 fl title-tour1 wow fadeInUp">
-                    <h1 style="color: #86B817;font-size: 30px;"> Danh Mục Tour </h1>
+                    <h1 style="color: #86B817;font-size: 30px;"> Danh Mục Tour {{$category->title}}</h1>
                 </div>
                 <div id="tour-list" class="row g-4 justify-content-center">
                     @foreach ($tours as $key => $tour)
@@ -67,7 +67,7 @@
                                         <small class="flex-fill text-center border-end border-bottom py-2"><i class="fa fa-mountain text-primary me-2"></i>{{ $tour->type->type_name }}</small>
                                         <small class="flex-fill text-center border-end border-bottom py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>{{ $tour->so_ngay }} Ngày - {{ $tour->so_ngay }}</small>
                                         
-                                        <small class="flex-fill text-center py-2 w-100"><i class="fa fa-plane text-primary me-2"></i>{{ $tour->tour_from }}</small>
+                                        <small class="flex-fill text-center border-end border-bottom py-2 w-100"><i class="fa fa-plane text-primary me-2"></i>{{ $tour->tour_from }}</small>
                                     </div>
                                     {{-- <div class="row">
                                         <div class="col-6 text-center py-2">

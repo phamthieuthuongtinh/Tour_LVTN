@@ -23,8 +23,8 @@
                         </ul>
                         <!-- Buttons for Edit and Change Password -->
                         <div class="mt-4">
-                            <a href="" class="btn btn-primary">Sửa thông tin</a>
-                            <a href="" class="btn btn-secondary">Đổi mật khẩu</a>
+                            <a href="{{route('customers.edit',[$customer->customer_id])}}" class="btn btn-primary">Sửa thông tin</a>
+                            <a href="{{route('customers.changePasswordForm',[$customer->customer_id])}}" class="btn btn-secondary">Đổi mật khẩu</a>
                         </div>
                     </div>
                 </div>

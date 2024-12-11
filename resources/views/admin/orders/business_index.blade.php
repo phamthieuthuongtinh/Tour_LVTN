@@ -72,8 +72,8 @@
                                     <div class="btn-group">
                                         @if ($ord->order_status == 1)
                                             <a href="{{ route('orders.show', [$ord->order_id]) }}" class="btn btn-warning"
-                                                title="Cập nhật">
-                                                <i class="fas fa-edit"></i>
+                                                title="Xem">
+                                                <i class="fas fa-eye"></i>
                                             </a>
 
                                             <form method="POST"

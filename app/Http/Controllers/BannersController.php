@@ -71,7 +71,8 @@ class BannersController extends Controller
      */
     public function edit(string $id)
     {
-        return view('admin.banners.edit');
+        $banner= Banner::where('banner_id',$id)->first();
+        return view('admin.banners.edit',compact('banner'));
     }
 
     /**
@@ -79,7 +80,35 @@ class BannersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $data = $request->validate([
+            'banner_title' => 'required',
+            'banner_content' => 'required',
+         
+        ],[
+            'banner_title.required' => 'Bạn chưa nhập tiêu đề',
+          
+            'banner_content.required' => 'Bạn chưa nhập mô tả',
+            
+        ]);
+        
+        $banner= Banner::where('banner_id',$id)->first();
+        $banner->banner_title = $data['banner_title'];
+        $banner->banner_content = $data['banner_content'];
+        
+        if($request->image){
+            $get_image = $request->image;
+            $path = 'upload/banners/';
+            $get_name_image = $get_image->getClientOriginalName();
+            $name_image = current(explode('.',$get_name_image));
+            $new_image = $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
+            $get_image->move($path,$new_image);
+            $banner->banner_image= $new_image;
+        }
+        
+        toastr()->success('Cập nhật thành công!');
+        $banner->save();
+        return redirect()->route('banners.index');
     }
 
     /**
@@ -87,6 +116,9 @@ class BannersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $banner=Banner::find($id);
+        $banner->delete();
+        toastr()->success('Xóa banner thành công!');
+        return redirect()->route('banners.index');
     }
 }

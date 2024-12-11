@@ -208,7 +208,7 @@
                                     <form>
                                         @csrf
                                         <div class="custom-select-wrapper">
-                                            <select class="form-control custom-select order_details">
+                                            <select class="form-control custom-select order_details" {{ Auth::user()->id != 1 ? 'disabled' : '' }}>
                                                 {{-- <option value="">---Trạng thái đơn hàng---</option> --}}
                                                 <option id="{{ $order->order_id }}" selected value="1">Đang xử lý
                                                 </option>
@@ -225,7 +225,7 @@
                                     <form>
                                         @csrf
                                         <div class="custom-select-wrapper ">
-                                            <select class="form-control custom-select order_details">
+                                            <select class="form-control custom-select order_details"{{ Auth::user()->id != 1 ? 'disabled' : '' }}>
                                                 {{-- <option value="">---Trạng thái đơn hàng---</option> --}}
                                                 <option id="{{ $order->order_id }}" value="1">Đang xử lý </option>
                                                 <option id="{{ $order->order_id }}" selected value="2">Đã thanh toán

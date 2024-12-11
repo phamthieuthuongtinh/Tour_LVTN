@@ -71,7 +71,7 @@
             <label for="exampleInputPassword1">Mô tả tour</label>
             <input type="text" class="form-control" value="{{$tour->description}}" name="description" id="exampleInputPassword1" placeholder="...">
          </div>
-         <div class="form-group">
+         {{-- <div class="form-group"> --}}
          <div class="form-group">
             <label for="exampleInputPassword1">Nơi xuất phát</label>
             <input type="text" class="form-control" value="{{$tour->tour_from}}" name="tour_from" id="exampleInputPassword1" placeholder="...">
@@ -174,9 +174,9 @@
        });
    });
 </script> --}}
-<style>
-   .select2-container .select2-selection--single {
-      height: calc(2.25rem + 2px) !important;
-   }
-</style>
+   <style>
+      .select2-container .select2-selection--single {
+         height: calc(2.25rem + 2px) !important;
+      }
+   </style>
 @endsection

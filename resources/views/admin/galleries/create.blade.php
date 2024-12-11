@@ -2,7 +2,7 @@
 @section('content')
 <div class="card card-primary">
    <div class="card-header">
-      <h3 class="card-title">Tạo Danh Mục</h3>
+      <h3 class="card-title">Thêm Thư Viện Ảnh</h3>
    </div>
    @if ($errors->any())
     <div class="alert alert-danger">
@@ -27,10 +27,10 @@
      
             </select>
         </div>
-         <div class="form-group">
+         {{-- <div class="form-group">
             <label for="exampleInputEmail1">Tiêu đề</label>
             <input type="text" class="form-control" name="title" id="exampleInputEmail1" placeholder="...">
-         </div>
+         </div> --}}
        
          <div class="form-group">
             <label for="exampleInputFile">Hình ảnh</label>
@@ -52,7 +52,7 @@
     <thead>
     <tr>
       <th>#</th>
-      <th>Tiêu đề</th>
+      {{-- <th>Tiêu đề</th> --}}
       <th>Hình ảnh</th>
       <th>Ngày thêm</th>
       <th>Thao tác</th>
@@ -62,7 +62,7 @@
       @foreach($galleries as $key => $gal)
       <tr>
           <td>{{$key}}</td>
-          <td>{{$gal->title}}</td>
+          {{-- <td>{{$gal->title}}</td> --}}
           <td><img src="{{asset('upload/galleries/'.$gal->image)}}" alt="" width=150 height=120></td>
           <td>{{$gal->created_at}}</td>
           <td>

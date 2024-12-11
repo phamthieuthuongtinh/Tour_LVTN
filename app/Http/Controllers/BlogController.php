@@ -136,15 +136,18 @@ class BlogController extends Controller
     }
     public function tintuc(){
         $blogs=Blog::where('category',1)->paginate(3);
-        return view('pages.blog_tintuc',compact('blogs'));
+        $type=1;
+        return view('pages.blog_tintuc',compact('blogs','type'));
     }
     public function camnang(){
+        $type=2;
         $blogs=Blog::where('category',2)->paginate(3);
-        return view('pages.blog_tintuc',compact('blogs'));
+        return view('pages.blog_tintuc',compact('blogs','type'));
     }
     public function kinhnghiem(){
+        $type=3;
         $blogs=Blog::where('category',3)->paginate(3);
-        return view('pages.blog_tintuc',compact('blogs'));
+        return view('pages.blog_tintuc',compact('blogs','type'));
     }
     public function detail_blog(string $id){
         $blog=Blog::find($id);

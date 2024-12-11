@@ -100,6 +100,9 @@ Route::get('thong-tin-tour-dat/{id}', [CustomerController::class, 'ordered'])->n
 Route::get('tour-da-thich/{id}', [CustomerController::class, 'liked'])->name('customers.liked');
 Route::post('update-departure-date/{id}', [CustomerController::class, 'update_order_date'])->name('customers.update_order_date');
 Route::delete('huy-tour/{id}', [OrderController::class, 'destroy_has_paid'])->name('orders.destroy_has_paid');
+Route::put('/profile/update', [CustomerController::class, 'update'])->name('profile.update');
+Route::get('/profile/change-password/{id}', [CustomerController::class, 'showChangePasswordForm'])->name('customers.changePasswordForm');
+Route::put('/profile/change-password/{id}', [CustomerController::class, 'changePassword'])->name('customers.changePassword');
 
 //Contact
 Route::resource('/contacts', ContactController::class);
@@ -170,5 +173,6 @@ Route::get('/tour-giam-gia/{slug}', [DiscountController::class, 'tour_sale'])->n
 //Staff
 Route::resource('/staffs', StaffController::class);
 Route::get('/staffs/manage/{id}', [StaffController::class, 'manage_task'])->name('staffs.manage_task');
+Route::post('/staffs/store', [StaffController::class, 'store'])->name('staffs.store');
 Route::post('/staffs', [StaffController::class, 'add_task'])->name('staffs.add_task');
 Route::delete('/staffs/destroy-task/{id}', [StaffController::class, 'destroy_task'])->name('staffs.destroy_task');
